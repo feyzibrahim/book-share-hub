@@ -43,7 +43,7 @@ const NewIphone = () => {
   return (
     <div className="pt-20 lg:py-20 relative">
       <h1 className="text-3xl lg:text-5xl font-bold text-center mb-5 text-gray-800">
-        Newest ex.iphones. Collection
+        Newest Book Share Hub Collection
       </h1>
       <button
         className="bg-white rounded-full w-10 h-10 text-xl flex items-center justify-center absolute top-1/2 left-0 transform -translate-y-1/2  text-gray-500 hover:text-gray-700"

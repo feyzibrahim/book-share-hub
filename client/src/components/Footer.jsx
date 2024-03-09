@@ -33,7 +33,7 @@ const Footer = () => {
           <input
             type="text"
             name="Username"
-            placeholder="Feyz Ibrahim"
+            placeholder="John deo"
             className="bg-transparent outline-none"
           />
         </div>
@@ -61,19 +61,19 @@ const Footer = () => {
             </ul>
             <ul>
               <li className="navbar-p mt-4">Contact Us</li>
-              <li className="navbar-li">+91 7356983827</li>
+              <li className="navbar-li">+91 999999999</li>
               <li className="navbar-li">help@exiphones.com</li>
               <li className="navbar-li">Calicut, KL, INDIA</li>
             </ul>
           </div>
           <div className="lg:w-1/4">
-            <img src={Logo} alt="ex.iphones." className="w-1/3 lg:mx-auto" />
+            <img src={Logo} alt="Book Share Hub" className="w-1/3 lg:mx-auto" />
           </div>
         </div>
         <div className="flex justify-between items-center">
           <SocialMedia />
           <p className="text-xs font-bold text-gray-500 lg:mr-14">
-            © 2023 — ex.iphones.
+            © 2023 — Book Share Hub
           </p>
         </div>
       </div>

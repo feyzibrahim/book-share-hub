@@ -13,7 +13,7 @@ const mailSender = async (email, title, body) => {
     });
     // Send emails to users
     let info = await transporter.sendMail({
-      from: "ex.iphones - Email Verification",
+      from: "Book Share Hub - Email Verification",
       to: email,
       subject: title,
       html: body,

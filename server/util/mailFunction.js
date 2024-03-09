@@ -79,7 +79,7 @@ const sendOTPMail = async (email, otp) => {
     
     <body>
         <div class="container">
-            <h2>ex.iphones.</h2>
+            <h2>Book Share Hub</h2>
             <div class="header">
                 <h1>Email Verification</h1>
             </div>
@@ -91,8 +91,8 @@ const sendOTPMail = async (email, otp) => {
             </div>
             <div class="footer">
                 <p>Best regards,</p>
-                <p>ex.iphones</p>
-                <p>&copy; 2023 ex.iphones. All rights reserved.</p>
+                <p>Book Share Hub</p>
+                <p>&copy; 2023 Book Share Hub All rights reserved.</p>
             </div>
         </div>
     </body>
@@ -169,7 +169,7 @@ const passwordChangedMail = async (email) => {
     
     <body>
         <div class="container">
-            <h2>ex.iphones.</h2>
+            <h2>Book Share Hub</h2>
             <div class="header">
               <h1>Email Authentication Notification</h1>
             </div>
@@ -180,8 +180,8 @@ const passwordChangedMail = async (email) => {
             </div>
             <div class="footer">
               <p>Best regards,</p>
-              <p>ex.iphones</p>
-              <p>&copy; 2023 ex.iphones. All rights reserved.</p>
+              <p>Book Share Hub</p>
+              <p>&copy; 2023 Book Share Hub All rights reserved.</p>
             </div>
         </div>
     </body>

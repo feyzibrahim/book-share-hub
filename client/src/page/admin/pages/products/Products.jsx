@@ -80,8 +80,8 @@ const Products = () => {
         />
         <div className="flex justify-between items-center font-semibold">
           <div>
-            <h1 className="font-bold text-2xl">Products</h1>
-            <BreadCrumbs list={["Dashboard", "Product List"]} />
+            <h1 className="font-bold text-2xl">Books</h1>
+            <BreadCrumbs list={["Dashboard", "Book List"]} />
           </div>
           <div className="flex gap-3">
             <button
@@ -89,7 +89,7 @@ const Products = () => {
               onClick={() => navigate("add")}
             >
               <AiOutlinePlus />
-              Add Product
+              Add Book
             </button>
           </div>
         </div>

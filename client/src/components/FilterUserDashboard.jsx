@@ -51,61 +51,61 @@ const FilterUserDashboard = ({ filters, price, handleClick, clearFilters }) => {
           <input
             type="radio"
             name="priceRange"
-            value="Under 25000"
-            checked={price === "Under 25000"}
+            value="Under 250"
+            checked={price === "Under 250"}
             onChange={(e) => handleClick("price", e.target.value)}
           />{" "}
-          Under 25000₹
+          Under 250₹
         </li>
         <li className="category-li">
           <input
             type="radio"
             name="priceRange"
-            value="25000-50000"
-            checked={price === "25000-50000"}
+            value="250-500"
+            checked={price === "250-500"}
             onChange={(e) => handleClick("price", e.target.value)}
           />{" "}
-          25000₹ - 50000₹
+          250₹ - 500₹
         </li>
         <li className="category-li">
           <input
             type="radio"
             name="priceRange"
-            value="50000-100000"
-            checked={price === "50000-100000"}
+            value="500-1000"
+            checked={price === "500-1000"}
             onChange={(e) => handleClick("price", e.target.value)}
           />{" "}
-          50000₹ - 100000₹
+          500₹ - 1000₹
         </li>
         <li className="category-li">
           <input
             type="radio"
             name="priceRange"
-            value="100000-150000"
-            checked={price === "100000-150000"}
+            value="1000-1500"
+            checked={price === "1000-1500"}
             onChange={(e) => handleClick("price", e.target.value)}
           />{" "}
-          100000₹ - 150000₹
+          1000₹ - 1500₹
         </li>
         <li className="category-li">
           <input
             type="radio"
             name="priceRange"
-            value="200000-300000"
-            checked={price === "200000-300000"}
+            value="2000-3000"
+            checked={price === "2000-3000"}
             onChange={(e) => handleClick("price", e.target.value)}
           />{" "}
-          200000₹ - 300000₹
+          2000₹ - 3000₹
         </li>
         <li className="category-li">
           <input
             type="radio"
             name="priceRange"
-            value="Above 300000"
-            checked={price === "Above 300000"}
+            value="Above 3000"
+            checked={price === "Above 3000"}
             onChange={(e) => handleClick("price", e.target.value)}
           />{" "}
-          Above 300000₹{" "}
+          Above 3000₹{" "}
         </li>
         <li>
           <button

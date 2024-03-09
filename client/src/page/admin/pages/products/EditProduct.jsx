@@ -213,16 +213,14 @@ const EditProduct = () => {
           positiveAction={handleSave}
         />
       )}
-      {/* Product add page */}
+      {/* Book add page */}
       <div className="p-5 w-full overflow-y-scroll text-sm">
         {/* Top Bar */}
         <div className="flex justify-between items-center font-semibold">
           <div>
-            <h1 className="font-bold text-2xl">Edit Products</h1>
+            <h1 className="font-bold text-2xl">Edit Books</h1>
             {/* Bread Crumbs */}
-            <BreadCrumbs
-              list={["Dashboard", "Category List", "Edit Products"]}
-            />
+            <BreadCrumbs list={["Dashboard", "Category List", "Edit Books"]} />
           </div>
           <div className="flex gap-3">
             <button
@@ -241,13 +239,13 @@ const EditProduct = () => {
             </button>
           </div>
         </div>
-        {/* Product Section */}
+        {/* Book Section */}
         <div className="lg:flex ">
-          {/* Product Information */}
+          {/* Book Information */}
           <div className="lg:w-4/6 lg:mr-5">
             <div className="admin-div lg:flex gap-5">
               <div className="lg:w-1/3 mb-3 lg:mb-0">
-                <h1 className="font-bold mb-3">Product Thumbnail</h1>
+                <h1 className="font-bold mb-3">Book Thumbnail</h1>
                 {fetchedData.imageURL ? (
                   <div className="bg-gray-100 py-5 rounded-lg text-center border-dashed border-2">
                     <div className="h-56">
@@ -274,11 +272,11 @@ const EditProduct = () => {
                 )}
               </div>
               <div className="lg:w-2/3">
-                <h1 className="font-bold">Product Information</h1>
+                <h1 className="font-bold">Book Information</h1>
                 <p className="admin-label">Title</p>
                 <input
                   type="text"
-                  placeholder="Type product name here"
+                  placeholder="Type Book name here"
                   className="admin-input"
                   name="name"
                   value={fetchedData.name || ""}
@@ -289,7 +287,7 @@ const EditProduct = () => {
                   name="description"
                   id="description"
                   className="admin-input h-36"
-                  placeholder="Type product description here..."
+                  placeholder="Type Book description here..."
                   value={fetchedData.description || ""}
                   onChange={handleInputChange}
                 ></textarea>
@@ -297,7 +295,7 @@ const EditProduct = () => {
                 <input
                   type="number"
                   name="stockQuantity"
-                  placeholder="Type product quantity here"
+                  placeholder="Type Book quantity here"
                   className="admin-input"
                   value={fetchedData.stockQuantity || ""}
                   onChange={handleInputChange}
@@ -306,7 +304,7 @@ const EditProduct = () => {
             </div>
             {/* Image Uploading */}
             <div className="admin-div">
-              <h1 className="font-bold">Product Images</h1>
+              <h1 className="font-bold">Book Images</h1>
               {fetchedData.moreImageURL &&
               fetchedData.moreImageURL.length > 0 ? (
                 <div className="bg-gray-100 py-5 rounded-lg text-center border-dashed border-2">
@@ -352,7 +350,7 @@ const EditProduct = () => {
             </div>
             {/* Attributes */}
             <div className="admin-div">
-              <h1 className="font-bold mb-2">Product Attributes</h1>
+              <h1 className="font-bold mb-2">Book Attributes</h1>
               <form
                 className="flex flex-col lg:flex-row items-center gap-3"
                 onSubmit={attributeHandler}
@@ -452,12 +450,12 @@ const EditProduct = () => {
           {/* Pricing */}
           <div className="lg:w-2/6">
             <div className="admin-div">
-              <h1 className="font-bold">Product Pricing</h1>
+              <h1 className="font-bold">Book Pricing</h1>
               <p className="admin-label">Amount</p>
               <input
                 type="number"
                 name="price"
-                placeholder="Type product name here"
+                placeholder="Type Book name here"
                 className="admin-input"
                 value={fetchedData.price || ""}
                 onChange={handleInputChange}
@@ -466,7 +464,7 @@ const EditProduct = () => {
               <input
                 type="number"
                 name="markup"
-                placeholder="Type product markup here"
+                placeholder="Type Book markup here"
                 className="admin-input"
                 value={fetchedData.markup || ""}
                 onChange={handleInputChange}
@@ -475,7 +473,7 @@ const EditProduct = () => {
               <input
                 type="number"
                 name="offer"
-                placeholder="Type product offer here"
+                placeholder="Type Book offer here"
                 className="admin-input"
                 value={fetchedData.offer || ""}
                 min={1}
@@ -485,7 +483,7 @@ const EditProduct = () => {
             </div>
             <div className="admin-div">
               <h1 className="font-bold">Category</h1>
-              <p className="admin-label">Product Category</p>
+              <p className="admin-label">Book Category</p>
               <select
                 name="category"
                 id="categories"
@@ -501,7 +499,7 @@ const EditProduct = () => {
               </select>
             </div>
             <div className="admin-div">
-              <h1 className="font-bold">Product Status</h1>
+              <h1 className="font-bold">Book Status</h1>
               <p className="admin-label">Status</p>
               <select
                 name="status"

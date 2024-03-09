@@ -48,7 +48,7 @@ const generateInvoicePDF = async (order) => {
         .image("public/official/logo.png", 50, 45, { width: 50 })
         .fillColor("#444444")
         .fontSize(20)
-        .text("ex.iphones Inc.", 110, 65)
+        .text("Book Share Hub Inc.", 110, 65)
         .fontSize(10)
         .text("7th Avenue, Sector 801", 200, 65, { align: "right" })
         .text("Calicut, Kerala, IN", 200, 80, { align: "right" })

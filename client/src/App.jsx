@@ -175,9 +175,9 @@ function AdminRoutes() {
     <Routes>
       <Route path="/" element={<AdminDash />}>
         <Route index element={<AdminHome />} />
-        <Route path="products" element={<Products />} />
-        <Route path="products/add" element={<AddProducts />} />
-        <Route path="products/edit/:id" element={<EditProduct />} />
+        <Route path="books" element={<Products />} />
+        <Route path="books/add" element={<AddProducts />} />
+        <Route path="books/edit/:id" element={<EditProduct />} />
 
         <Route path="categories" element={<Categories />} />
         <Route path="categories/create" element={<CreateCategory />} />

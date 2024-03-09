@@ -127,11 +127,9 @@ const AddProducts = () => {
         {/* Top Bar */}
         <div className="flex justify-between items-center font-semibold">
           <div>
-            <h1 className="font-bold text-2xl">Add Products</h1>
+            <h1 className="font-bold text-2xl">Add Books</h1>
             {/* Bread Crumbs */}
-            <BreadCrumbs
-              list={["Dashboard", "Products List", "Add Products"]}
-            />
+            <BreadCrumbs list={["Dashboard", "Books List", "Add Books"]} />
           </div>
           <div className="flex gap-3">
             <button
@@ -150,21 +148,21 @@ const AddProducts = () => {
             </button>
           </div>
         </div>
-        {/* Product Section */}
+        {/* Book Section */}
         <div className="lg:flex ">
-          {/* Product Information */}
+          {/* Book Information */}
           <div className="lg:w-4/6 lg:mr-5">
             <div className="admin-div lg:flex gap-5">
               <div className="lg:w-1/3 mb-3 lg:mb-0">
-                <h1 className="font-bold mb-3">Product Thumbnail</h1>
+                <h1 className="font-bold mb-3">Book Thumbnail</h1>
                 <CustomSingleFileInput onChange={handleSingleImageInput} />
               </div>
               <div className="lg:w-2/3">
-                <h1 className="font-bold">Product Information</h1>
+                <h1 className="font-bold">Book Information</h1>
                 <p className="admin-label">Title</p>
                 <input
                   type="text"
-                  placeholder="Type product name here"
+                  placeholder="Type Book name here"
                   className="admin-input"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -174,14 +172,14 @@ const AddProducts = () => {
                   name="description"
                   id="description"
                   className="admin-input h-36"
-                  placeholder="Type product description here..."
+                  placeholder="Type Book description here..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 ></textarea>
                 <p className="admin-label">Quantity</p>
                 <input
                   type="number"
-                  placeholder="Type product quantity here"
+                  placeholder="Type Book quantity here"
                   className="admin-input"
                   value={stockQuantity}
                   onChange={(e) => setStockQuantity(e.target.value)}
@@ -190,13 +188,13 @@ const AddProducts = () => {
             </div>
             {/* Image Uploading */}
             <div className="admin-div">
-              <h1 className="font-bold">Product Images</h1>
+              <h1 className="font-bold">Book Images</h1>
               <p className="admin-label my-2">Drop Here</p>
               <CustomFileInput onChange={handleMultipleImageInput} />
             </div>
             {/* Attributes */}
             <div className="admin-div">
-              <h1 className="font-bold mb-2">Product Attributes</h1>
+              <h1 className="font-bold mb-2">Book Attributes</h1>
               <form
                 className="flex flex-col lg:flex-row items-center gap-3"
                 onSubmit={attributeHandler}
@@ -252,11 +250,11 @@ const AddProducts = () => {
           {/* Pricing */}
           <div className="lg:w-2/6">
             <div className="admin-div">
-              <h1 className="font-bold">Product Pricing</h1>
+              <h1 className="font-bold">Book Pricing</h1>
               <p className="admin-label">Amount</p>
               <input
                 type="number"
-                placeholder="Type product name here"
+                placeholder="Type Book name here"
                 className="admin-input"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
@@ -264,7 +262,7 @@ const AddProducts = () => {
               <p className="admin-label">Markup</p>
               <input
                 type="number"
-                placeholder="Type product markup here"
+                placeholder="Type Book markup here"
                 className="admin-input"
                 value={markup}
                 onChange={(e) => setMarkup(e.target.value)}
@@ -272,7 +270,7 @@ const AddProducts = () => {
               <p className="admin-label">Offer</p>
               <input
                 type="number"
-                placeholder="Type product offer here"
+                placeholder="Type Book offer here"
                 className="admin-input"
                 value={offer}
                 min={1}
@@ -282,7 +280,7 @@ const AddProducts = () => {
             </div>
             <div className="admin-div">
               <h1 className="font-bold">Category</h1>
-              <p className="admin-label">Product Category</p>
+              <p className="admin-label">Book Category</p>
               <select
                 name="categories"
                 id="categories"
@@ -299,7 +297,7 @@ const AddProducts = () => {
               </select>
             </div>
             <div className="admin-div">
-              <h1 className="font-bold">Product Status</h1>
+              <h1 className="font-bold">Book Status</h1>
               <p className="admin-label">Status</p>
               <select
                 name="status"

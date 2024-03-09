@@ -176,9 +176,6 @@ const ProductDetails = () => {
                   </span>
                 </p>
                 <p>
-                  Brand: <span className="font-semibold">Apple</span>{" "}
-                </p>
-                <p>
                   Category:{" "}
                   <span className="font-semibold">
                     {product.category && product.category.name}

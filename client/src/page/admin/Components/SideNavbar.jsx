@@ -3,7 +3,7 @@ import ExIphoneLogo from "../../../components/ExIphoneLogo";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { RiDashboardLine } from "react-icons/ri";
-import { FiBox, FiSettings, FiHelpCircle, FiLogOut } from "react-icons/fi";
+import { FiSettings, FiHelpCircle, FiLogOut } from "react-icons/fi";
 import { ImStack } from "react-icons/im";
 import { HiOutlineTicket } from "react-icons/hi";
 import { BsCardChecklist, BsCreditCard } from "react-icons/bs";
@@ -11,6 +11,7 @@ import { AiOutlineTags } from "react-icons/ai";
 import { FaUsersCog, FaUsers } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../redux/actions/userActions";
+import { BiBook } from "react-icons/bi";
 
 const SideNavbar = () => {
   const { user } = useSelector((state) => state.user);
@@ -25,7 +26,7 @@ const SideNavbar = () => {
 
   return (
     <>
-      <div className="w-7 flex items-center cursor-pointer opacity-70 hover:opacity-100">
+      <div className="w-40 flex items-center cursor-pointer opacity-70 hover:opacity-100">
         <ExIphoneLogo />
       </div>
       <div className="text-gray-600 font-semibold mt-5">
@@ -34,9 +35,9 @@ const SideNavbar = () => {
           <RiDashboardLine />
           Dashboard
         </NavLink>
-        <NavLink className="side-nav-link-sp" to="products">
-          <FiBox />
-          Products
+        <NavLink className="side-nav-link-sp" to="books">
+          <BiBook />
+          Books
         </NavLink>
         <NavLink className="side-nav-link-sp" to="categories">
           <ImStack />
