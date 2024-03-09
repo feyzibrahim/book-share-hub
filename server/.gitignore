@@ -26,4 +26,4 @@ dist-ssr
 # Environment file
 .env
 
-public
+# public
