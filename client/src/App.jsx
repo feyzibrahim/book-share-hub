@@ -69,6 +69,18 @@ import EditCoupon from "./page/admin/pages/coupon/EditCoupon";
 import FindCoupons from "./page/user/profileDashboard/pages/findCoupons";
 import OrderConfirmation from "./page/user/components/OrderConfirmation";
 import SettingsPage from "./page/user/profileDashboard/pages/settings";
+import LenderDashboard from "./page/lender/LenderDashboard";
+import LenderHome from "./page/lender/pages/LenderHome";
+import AddLendProducts from "./page/lender/pages/products/AddLendProducts";
+import LenderSettings from "./page/lender/pages/LenderSettings";
+import PublisherDashboard from "./page/publisher/PublisherDashboard";
+import PublisherHome from "./page/publisher/pages/PublisherHome";
+import PublisherSettings from "./page/publisher/pages/PublisherSettings";
+import AddPublishProducts from "./page/publisher/pages/products/AddPublishProducts";
+import PublisherProducts from "./page/publisher/pages/products/PublisherProducts";
+import LenderProducts from "./page/lender/pages/products/LenderProducts";
+import Lenders from "./page/admin/pages/lender/Lenders";
+import Publishers from "./page/admin/pages/publisher/Publishers";
 
 function App() {
   const { user } = useSelector((state) => state.user);
@@ -85,29 +97,37 @@ function App() {
 
     return user ? element : <Navigate to="/login" />;
   };
+  const NavigateToProperRoute = () => {
+    const { user } = useSelector((state) => state.user);
+
+    if (!user) {
+      return <Home />;
+    }
+
+    if (user.role === "buyer") {
+      return <Dashboard />;
+    }
+
+    if (user.role === "admin" || user.role === "superAdmin") {
+      return <Navigate to="/admin/" />;
+    }
+    if (user.role === "lender") {
+      return <Navigate to="/lender/" />;
+    }
+    if (user.role === "publisher") {
+      return <Navigate to="/publisher/" />;
+    }
+  };
 
   return (
     <>
       <Toaster position="top-center" />
 
       <BrowserRouter>
-        {user ? user.role === "user" && <Navbar /> : <Navbar />}
+        {user ? user.role === "buyer" && <Navbar /> : <Navbar />}
 
         <Routes>
-          <Route
-            path="/"
-            element={
-              user ? (
-                user.role === "admin" || user.role === "superAdmin" ? (
-                  <Navigate to="/admin/" />
-                ) : (
-                  <Dashboard />
-                )
-              ) : (
-                <Home />
-              )
-            }
-          />
+          <Route path="/" element={<NavigateToProperRoute />} />
 
           {/* Auth Pages */}
           <Route path="login" element={<Login />} />
@@ -160,6 +180,19 @@ function App() {
             <Route path="/admin" element={<Navigate to="/" />} />
           )}
 
+          {/* Lender Routes */}
+
+          {user && user.role === "lender" ? (
+            <Route path="/lender/*" element={<LenderRoutes />} />
+          ) : (
+            <Route path="/lender" element={<Navigate to="/" />} />
+          )}
+          {user && user.role === "publisher" ? (
+            <Route path="/publisher/*" element={<PublisherRoutes />} />
+          ) : (
+            <Route path="/publisher" element={<Navigate to="/" />} />
+          )}
+
           <Route path="*" element={<Error404 />} />
         </Routes>
         {user ? user.role === "user" && <Footer /> : <Footer />}
@@ -201,7 +234,55 @@ function AdminRoutes() {
         <Route path="banner" element={<Banner />} />
         <Route path="payments" element={<Payments />} />
         <Route path="customers" element={<Customers />} />
+        <Route path="lenders" element={<Lenders />} />
+        <Route path="publishers" element={<Publishers />} />
         <Route path="settings" element={<Settings />} />
+        <Route path="help" element={<Help />} />
+        <Route path="*" element={<Error404 />} />
+      </Route>
+    </Routes>
+  );
+}
+function LenderRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={<LenderDashboard />}>
+        <Route index element={<LenderHome />} />
+        <Route path="books" element={<LenderProducts />} />
+        <Route path="books/add" element={<AddLendProducts />} />
+        <Route path="books/edit/:id" element={<EditProduct />} />
+
+        <Route path="orders" element={<Orders />} />
+        <Route path="orders/detail/:id" element={<OrderDetails />} />
+        <Route path="orders/return-requests" element={<ReturnRequests />} />
+        <Route
+          path="orders/return-requests/detail/:id"
+          element={<OrderDetails />}
+        />
+        <Route path="settings" element={<LenderSettings />} />
+        <Route path="help" element={<Help />} />
+        <Route path="*" element={<Error404 />} />
+      </Route>
+    </Routes>
+  );
+}
+function PublisherRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={<PublisherDashboard />}>
+        <Route index element={<PublisherHome />} />
+        <Route path="books" element={<PublisherProducts />} />
+        <Route path="books/add" element={<AddPublishProducts />} />
+        <Route path="books/edit/:id" element={<EditProduct />} />
+
+        <Route path="orders" element={<Orders />} />
+        <Route path="orders/detail/:id" element={<OrderDetails />} />
+        <Route path="orders/return-requests" element={<ReturnRequests />} />
+        <Route
+          path="orders/return-requests/detail/:id"
+          element={<OrderDetails />}
+        />
+        <Route path="settings" element={<PublisherSettings />} />
         <Route path="help" element={<Help />} />
         <Route path="*" element={<Error404 />} />
       </Route>

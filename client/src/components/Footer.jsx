@@ -62,7 +62,7 @@ const Footer = () => {
             <ul>
               <li className="navbar-p mt-4">Contact Us</li>
               <li className="navbar-li">+91 999999999</li>
-              <li className="navbar-li">help@exiphones.com</li>
+              <li className="navbar-li">help@booksharehub.com</li>
               <li className="navbar-li">Calicut, KL, INDIA</li>
             </ul>
           </div>

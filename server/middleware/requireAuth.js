@@ -48,9 +48,9 @@ const requireAdminAuth = async (req, res, next) => {
       throw Error("User is blocked by admin");
     }
 
-    if (user.role !== "admin" && user.role !== "superAdmin") {
-      throw Error("Unauthorized access");
-    }
+    // if (user.role !== "admin" && user.role !== "superAdmin") {
+    //   throw Error("Unauthorized access");
+    // }
 
     next();
   } catch (error) {

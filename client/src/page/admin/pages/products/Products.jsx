@@ -128,6 +128,7 @@ const Products = () => {
                   <tr className="border-b border-gray-200">
                     <th className="admin-table-head w-3/12">Name</th>
                     <th className="admin-table-head w-3/12">Description</th>
+                    <th className="admin-table-head w-3/12">Created By</th>
                     <th className="admin-table-head w-1/12">Category</th>
                     <th className="admin-table-head w-1/12">Quantity</th>
                     <th className="admin-table-head w-1/12">Price</th>

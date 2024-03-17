@@ -17,6 +17,8 @@ const {
   deleteCustomer,
   updateCustomer,
   blockOrUnBlockCustomer,
+  getLenders,
+  getPublishers,
 } = require("../controllers/admin/customerController");
 const {
   getCategories,
@@ -84,6 +86,10 @@ router.delete("/customer/:id", deleteCustomer);
 router.patch("/customer/:id", updateCustomer);
 router.post("/customer", upload.any(), addCustomer);
 router.patch("/customer-block-unblock/:id", blockOrUnBlockCustomer);
+
+// Lender
+router.get("/lenders", getLenders);
+router.get("/publishers", getPublishers);
 
 // Category controller functions mounting them to corresponding route
 router.get("/categories", getCategories);

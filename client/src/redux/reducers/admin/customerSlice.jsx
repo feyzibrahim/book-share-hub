@@ -3,6 +3,8 @@ import {
   getCustomers,
   createNewCustomer,
   blockOrUnBlock,
+  getLenders,
+  getPublishers,
 } from "../../actions/admin/customerAction";
 import toast from "react-hot-toast";
 
@@ -26,6 +28,34 @@ const customerSlice = createSlice({
         state.totalAvailableUsers = payload.totalAvailableUsers;
       })
       .addCase(getCustomers.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.customers = null;
+        state.error = payload;
+      })
+      .addCase(getLenders.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getLenders.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.error = null;
+        state.customers = payload.customers;
+        state.totalAvailableUsers = payload.totalAvailableUsers;
+      })
+      .addCase(getLenders.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.customers = null;
+        state.error = payload;
+      })
+      .addCase(getPublishers.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getPublishers.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.error = null;
+        state.customers = payload.customers;
+        state.totalAvailableUsers = payload.totalAvailableUsers;
+      })
+      .addCase(getPublishers.rejected, (state, { payload }) => {
         state.loading = false;
         state.customers = null;
         state.error = payload;

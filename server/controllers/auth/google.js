@@ -30,7 +30,7 @@ const loginUsingGoogle = async (req, res) => {
       profileImageURL: picture,
       firstName: name,
       isActive: true,
-      role: "user",
+      role: "buyer",
       isEmailVerified: true,
     });
   }

@@ -33,6 +33,12 @@ const TableRow = ({ index, length, product }) => {
       <td className="admin-table-row">
         <div className="line-clamp-2">{product.description}</div>
       </td>
+      <td className="admin-table-row">
+        <div className="line-clamp-2">
+          {product.createdBy?.firstName ?? ""}{" "}
+          {product.createdBy?.lastName ?? ""}
+        </div>
+      </td>
       <td className="admin-table-row">{product?.category?.name || ""}</td>
       <td className="admin-table-row">{product.stockQuantity}</td>
       <td className="admin-table-row">{product.price}</td>

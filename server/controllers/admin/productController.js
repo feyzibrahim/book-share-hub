@@ -1,5 +1,6 @@
 const Product = require("../../model/productModel");
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 
 // Getting all products to list on admin dashboard
 const getProducts = async (req, res) => {
@@ -23,6 +24,16 @@ const getProducts = async (req, res) => {
     }
     const skip = (page - 1) * limit;
 
+    // Getting products based on user role
+
+    const token = req.cookies.user_token;
+
+    const { _id, role } = jwt.verify(token, process.env.SECRET);
+
+    if (role === "lender" || role === "publisher") {
+      filter.createdBy = _id;
+    }
+
     // Date
     if (startingDate) {
       const date = new Date(startingDate);
@@ -39,7 +50,8 @@ const getProducts = async (req, res) => {
     })
       .skip(skip)
       .limit(limit)
-      .populate("category", { name: 1 });
+      .populate("category", { name: 1 })
+      .populate("createdBy");
 
     const totalAvailableProducts = await Product.countDocuments(filter);
 
@@ -80,6 +92,11 @@ const addProduct = async (req, res) => {
 
     formData.attributes = attributes;
 
+    const token = req.cookies.user_token;
+
+    const { _id } = jwt.verify(token, process.env.SECRET);
+    formData.createdBy = _id;
+
     if (files && files.length > 0) {
       formData.moreImageURL = [];
       formData.imageURL = "";
@@ -93,8 +110,11 @@ const addProduct = async (req, res) => {
     }
 
     const product = await Product.create(formData);
+    const newProduct = await Product.findOne({ _id: product._id }).populate(
+      "createdBy"
+    );
 
-    res.status(200).json({ product });
+    res.status(200).json({ product: newProduct });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

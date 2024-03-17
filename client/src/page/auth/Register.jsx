@@ -13,7 +13,7 @@ import {
   googleLoginOrSignUp,
   signUpUser,
 } from "../../redux/actions/userActions";
-import { Formik, Form, ErrorMessage } from "formik";
+import { Formik, Form, ErrorMessage, Field } from "formik";
 import * as Yup from "yup";
 import InputWithIcon from "../../components/InputWithIcon";
 import PasswordInputWithIcon from "../../components/PasswordInputWithIcon";
@@ -27,7 +27,7 @@ import { commonRequest } from "../../Common/api";
 import { updateError } from "../../redux/reducers/userSlice";
 
 const Register = () => {
-  const { user, loading, error } = useSelector((state) => state.user);
+  const { user, error } = useSelector((state) => state.user);
   const [emailSec, setEmailSec] = useState(true);
   const [otpSec, setOTPSec] = useState(false);
   const [otpExpired, setOTPExpired] = useState(false);
@@ -52,6 +52,7 @@ const Register = () => {
     passwordAgain: "",
     phoneNumber: "",
     profileImgURL: null,
+    role: "",
   };
 
   const validationSchema = Yup.object().shape({
@@ -70,6 +71,7 @@ const Register = () => {
     phoneNumber: Yup.number()
       .typeError("Phone number should be digits")
       .moreThan(999999999, "Not valid phone number"),
+    role: Yup.string("Must be string").required("Please select one"),
   });
 
   const dispatch = useDispatch();
@@ -84,6 +86,7 @@ const Register = () => {
     formData.append("password", data.password);
     formData.append("passwordAgain", data.passwordAgain);
     formData.append("phoneNumber", data.phoneNumber);
+    formData.append("role", data.role);
     if (data.profileImgURL) {
       formData.append("profileImgURL", data.profileImgURL);
     }
@@ -95,6 +98,7 @@ const Register = () => {
     // Display loading state
     setOTPLoading(true);
     setData(value);
+
     if (value.email.trim() === "") {
       toast.error("Enter an email to continue");
       return;
@@ -195,9 +199,44 @@ const Register = () => {
                 />
                 <InputWithIcon
                   icon={<AiOutlinePhone />}
-                  title="Phone Number"
+                  title="Phone Number (Optional)"
                   name="phoneNumber"
                   placeholder="Enter your phone number"
+                />
+                <p className="py-2">What you want to do with booksharehub?</p>
+                <div className="flex gap-5">
+                  <div className="flex items-center gap-1">
+                    <Field
+                      className="sign-up-input"
+                      type="radio"
+                      name="role"
+                      value="buyer"
+                    />
+                    <label htmlFor="buyer">Buy or Rent Book</label>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Field
+                      className="sign-up-input"
+                      type="radio"
+                      name="role"
+                      value="lender"
+                    />
+                    <label htmlFor="lender">Lend</label>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Field
+                      className="sign-up-input"
+                      type="radio"
+                      name="role"
+                      value="publisher"
+                    />
+                    <label htmlFor="publisher">Publish</label>
+                  </div>
+                </div>
+                <ErrorMessage
+                  className="text-sm text-red-500"
+                  name="role"
+                  component="span"
                 />
                 <button
                   type="submit"

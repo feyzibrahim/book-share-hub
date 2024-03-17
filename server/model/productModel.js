@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Category = require("../model/categoryModel");
+const User = require("./userModel");
 const { Schema } = mongoose;
 
 const productsSchema = new Schema(
@@ -35,6 +36,14 @@ const productsSchema = new Schema(
         "low quantity",
         "unpublished",
       ],
+    },
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: User,
+    },
+    productType: {
+      type: String,
+      enum: ["sell", "rent"],
     },
     attributes: [
       {

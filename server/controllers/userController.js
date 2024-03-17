@@ -2,8 +2,8 @@ const User = require("../model/userModel");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
-const createToken = (_id) => {
-  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "1d" });
+const createToken = (_id, role) => {
+  return jwt.sign({ _id, role }, process.env.SECRET, { expiresIn: "1d" });
 };
 
 const cookieConfig = {
@@ -44,9 +44,9 @@ const signUpUser = async (req, res) => {
       userCredentials = { ...userCredentials, profileImgURL: profileImgURL };
     }
 
-    const user = await User.signup(userCredentials, "user", true);
+    const user = await User.signup(userCredentials, userCredentials.role, true);
 
-    const token = createToken(user._id);
+    const token = createToken(user._id, user.role);
 
     res.cookie("user_token", token, cookieConfig);
 
@@ -62,7 +62,7 @@ const loginUser = async (req, res) => {
   try {
     const user = await User.login(email, password);
 
-    const token = createToken(user._id);
+    const token = createToken(user._id, user.role);
 
     res.cookie("user_token", token, cookieConfig);
 

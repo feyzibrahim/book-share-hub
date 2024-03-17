@@ -30,7 +30,7 @@ const UserSchema = new Schema(
     role: {
       type: String,
       required: true,
-      enum: ["user", "admin", "superAdmin"],
+      enum: ["buyer", "admin", "superAdmin", "lender", "publisher"],
     },
     isActive: {
       type: Boolean,
@@ -127,6 +127,10 @@ UserSchema.statics.login = async function (email, password) {
     throw Error(
       "Your account is blocked. Contact customer care for further details"
     );
+  }
+
+  if (!user.password) {
+    throw Error("Please login with google authentication");
   }
 
   const match = await bcrypt.compare(password, user.password);

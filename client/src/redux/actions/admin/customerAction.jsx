@@ -28,6 +28,30 @@ export const getCustomers = createAsyncThunk(
     );
   }
 );
+export const getLenders = createAsyncThunk(
+  "customers/getLenders",
+  async (queries, { rejectWithValue }) => {
+    return commonReduxRequest(
+      "get",
+      `/admin/lenders${queries && `?${queries}`}`,
+      null,
+      appJson,
+      rejectWithValue
+    );
+  }
+);
+export const getPublishers = createAsyncThunk(
+  "customers/getPublishers",
+  async (queries, { rejectWithValue }) => {
+    return commonReduxRequest(
+      "get",
+      `/admin/publishers${queries && `?${queries}`}`,
+      null,
+      appJson,
+      rejectWithValue
+    );
+  }
+);
 
 export const blockOrUnBlock = createAsyncThunk(
   "customers/blockOrUnBlock",
