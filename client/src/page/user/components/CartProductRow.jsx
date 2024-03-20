@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import JustLoading from "../../../components/JustLoading";
 
 const CartProductRow = ({ item, isLast, toggleProductConfirm }) => {
+  console.log("file: CartProductRow.jsx:15 -> CartProductRow -> item", item);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -46,7 +47,9 @@ const CartProductRow = ({ item, isLast, toggleProductConfirm }) => {
         </div>
       </td>
       <td className="cart-table-row">
-        {item.product.price + item.product.markup}
+        {item.product.markup
+          ? item.product.price + item.product.markup
+          : item.product.price}
       </td>
       <td className="cart-table-row w-36">
         {countLoading ? (
@@ -60,7 +63,9 @@ const CartProductRow = ({ item, isLast, toggleProductConfirm }) => {
         )}
       </td>
       <td className="cart-table-row">
-        {(item.product.price + item.product.markup) * item.quantity}
+        {item.product.markup
+          ? (item.product.price + item.product.markup) * item.quantity
+          : item.product.price * item.quantity}
       </td>
       <td>
         <div

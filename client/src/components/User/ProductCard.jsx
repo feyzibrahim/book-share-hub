@@ -8,7 +8,7 @@ const ProductCard = ({ product }) => {
 
   return (
     <div
-      className="p-5 bg-white rounded-lg border border-gray-200 hover:shadow-lg cursor-pointer"
+      className="p-5 bg-white rounded-lg border border-gray-200 hover:shadow-lg cursor-pointer relative"
       onClick={() => {
         navigate(`/product/${product._id}`);
       }}
@@ -38,7 +38,18 @@ const ProductCard = ({ product }) => {
             ₹
           </span>
         )}
-        {" " + (product.price + product.markup)}₹
+        {product.markup ? (
+          <span>{product.price + product.markup}₹</span>
+        ) : (
+          <span>{product.price}₹</span>
+        )}
+      </p>
+      <p
+        className={`absolute top-2 right-2 ${
+          product.productType === "sell" ? "bg-red-500" : "bg-green-500"
+        }  text-white px-2 capitalize rounded-md`}
+      >
+        {product.productType === "sell" ? "buy" : "rent"}
       </p>
     </div>
   );

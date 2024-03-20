@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { BiBadgeCheck, BiCheckShield, BiPhoneCall } from "react-icons/bi";
-import { FaShippingFast } from "react-icons/fa";
+import { FaShippingFast, FaUsers } from "react-icons/fa";
 import { RiSecurePaymentLine } from "react-icons/ri";
 import axios from "axios";
 import { URL } from "../../../Common/api";
 import ReviewRow from "./ReviewRow";
 import { renderStars } from "../../../Common/functions";
+import InputWithIcon from "./InputWithIcon";
+import ProfileImage from "../../../components/ProfileImage";
+import { AiOutlineMail, AiOutlineUser } from "react-icons/ai";
 
 const DescReview = ({ product, id }) => {
+  const user = product.createdBy;
   // Toggle between description and Reviews
-  const [descriptionOrReview, setDescriptionOrReview] = useState(true);
-  const toggleDescReview = () => {
-    setDescriptionOrReview(!descriptionOrReview);
+  const [descriptionOrReview, setDescriptionOrReview] = useState("description");
+  const toggleDescReview = (val) => {
+    setDescriptionOrReview(val);
   };
 
   // Loading data
@@ -47,26 +51,36 @@ const DescReview = ({ product, id }) => {
       <div className="flex justify-center gap-8 border-b">
         <button
           className={`uppercase text-xs py-3 ${
-            descriptionOrReview
+            descriptionOrReview === "description"
               ? "border-b-2 border-blue-500 font-semibold"
               : ""
           }`}
-          onClick={toggleDescReview}
+          onClick={() => toggleDescReview("description")}
         >
           Description
         </button>
         <button
           className={`uppercase text-xs py-3 ${
-            !descriptionOrReview
+            descriptionOrReview === "review"
               ? "border-b-2 border-blue-500 font-semibold"
               : ""
           }`}
-          onClick={toggleDescReview}
+          onClick={() => toggleDescReview("review")}
         >
           Review
         </button>
+        <button
+          className={`uppercase text-xs py-3 ${
+            descriptionOrReview === "providedBy"
+              ? "border-b-2 border-blue-500 font-semibold"
+              : ""
+          }`}
+          onClick={() => toggleDescReview("providedBy")}
+        >
+          Provided By
+        </button>
       </div>
-      {descriptionOrReview ? (
+      {descriptionOrReview === "description" && (
         <div className="p-5 lg:flex gap-5">
           <div className="w-full">
             <h1 className="font-semibold my-2">Description</h1>
@@ -125,7 +139,8 @@ const DescReview = ({ product, id }) => {
             </ul>
           </div>
         </div>
-      ) : (
+      )}
+      {descriptionOrReview === "review" && (
         <div className="p-5">
           {error ? (
             <p>{error}</p>
@@ -184,6 +199,46 @@ const DescReview = ({ product, id }) => {
               </div>
             </>
           )}
+        </div>
+      )}
+      {descriptionOrReview === "providedBy" && (
+        <div className="w-full">
+          <div className="lg:flex items-start gap-5 p-5">
+            <div className="h-40 w-40 shrink-0">
+              <ProfileImage user={user} />
+            </div>
+
+            <div className="w-full">
+              <div className="lg:grid grid-cols-2 gap-5 ">
+                <InputWithIcon
+                  icon={<AiOutlineUser />}
+                  title="First Name"
+                  name={user?.firstName || "-"}
+                />
+                <InputWithIcon
+                  icon={<AiOutlineUser />}
+                  title="Last Name"
+                  name={user?.lastName || "-"}
+                />
+                <InputWithIcon
+                  icon={<AiOutlineMail />}
+                  title="Email"
+                  name={user?.email || "-"}
+                />
+                <InputWithIcon
+                  icon={<FaUsers />}
+                  title="Type"
+                  name={
+                    user?.role ? (
+                      <span className="capitalize">{user?.role}</span>
+                    ) : (
+                      "-"
+                    )
+                  }
+                />
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

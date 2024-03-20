@@ -10,6 +10,7 @@ import * as Yup from "yup";
 import ConfirmModal from "../../../../components/ConfirmModal";
 import axios from "axios";
 import { URL } from "@common/api";
+import { commonRequest } from "../../../../Common/api";
 
 const EditCategory = () => {
   const dispatch = useDispatch();
@@ -57,9 +58,14 @@ const EditCategory = () => {
   useEffect(() => {
     const loadInitialData = async () => {
       try {
-        const response = await axios.get(`${URL}/admin/category/${id}`);
+        // const response = await axios.get(`${URL}/admin/category/${id}`);
+        const response = await commonRequest("GET", `/admin/category/${id}`);
 
-        const categoryData = response.data.category;
+        console.log(
+          "file: EditCategory.jsx:64 -> loadInitialData -> response",
+          response
+        );
+        const categoryData = response.category;
         setInitialValues({
           title: categoryData.name,
           description: categoryData.description,

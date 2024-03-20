@@ -12,7 +12,7 @@ import { getCategories } from "../../../../redux/actions/admin/categoriesAction"
 import { URL } from "@common/api";
 import toast from "react-hot-toast";
 
-const EditProduct = () => {
+const EditLenderProduct = () => {
   const dispatch = useDispatch();
 
   const { id } = useParams();
@@ -451,22 +451,13 @@ const EditProduct = () => {
           <div className="lg:w-2/6">
             <div className="admin-div">
               <h1 className="font-bold">Book Pricing</h1>
-              <p className="admin-label">Amount</p>
+              <p className="admin-label">Amount per day</p>
               <input
                 type="number"
                 name="price"
                 placeholder="Type Book name here"
                 className="admin-input"
                 value={fetchedData.price || ""}
-                onChange={handleInputChange}
-              />
-              <p className="admin-label">Markup</p>
-              <input
-                type="number"
-                name="markup"
-                placeholder="Type Book markup here"
-                className="admin-input"
-                value={fetchedData.markup || ""}
                 onChange={handleInputChange}
               />
               <p className="admin-label">Offer</p>
@@ -522,4 +513,4 @@ const EditProduct = () => {
   );
 };
 
-export default EditProduct;
+export default EditLenderProduct;

@@ -184,7 +184,10 @@ const ProductDetails = () => {
               </div>
               <p className="text-xl font-semibold my-2">
                 <span className="text-blue-600">
-                  {product.price + product.markup}₹
+                  {product.markup
+                    ? product.price + product.markup
+                    : product.price}
+                  ₹
                 </span>
                 {"  "}
                 {product.offer && (

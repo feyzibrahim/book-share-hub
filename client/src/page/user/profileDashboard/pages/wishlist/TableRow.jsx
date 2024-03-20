@@ -59,7 +59,12 @@ const TableRow = ({ item }) => {
         </div>
         <p className="line-clamp-1">{item.product.name}</p>
       </td>
-      <td className="px-5 py-3">₹{item.product.price + item.product.markup}</td>
+      <td className="px-5 py-3">
+        ₹
+        {item.product.markup
+          ? item.product.price + item.product.markup
+          : item.product.price}
+      </td>
       <td className="px-5 py-3 capitalize">
         {item.product.status === "published" && "available"}
         {item.product.status === "draft" && "not available"}

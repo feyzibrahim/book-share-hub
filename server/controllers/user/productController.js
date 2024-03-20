@@ -3,7 +3,15 @@ const mongoose = require("mongoose");
 
 const getProducts = async (req, res) => {
   try {
-    const { category, price, search, sort, page = 1, limit = 4 } = req.query;
+    const {
+      category,
+      price,
+      search,
+      sort,
+      page = 1,
+      limit = 4,
+      productType,
+    } = req.query;
 
     let filter = {};
     if (category) filter.category = { $in: category.split(",") };
@@ -47,6 +55,10 @@ const getProducts = async (req, res) => {
       sortOptions.createdAt = -1;
     }
 
+    if (productType) {
+      filter.productType = productType;
+    }
+
     const skip = (page - 1) * limit;
     const products = await Product.find(
       {
@@ -61,6 +73,7 @@ const getProducts = async (req, res) => {
         numberOfReviews: 1,
         rating: 1,
         offer: 1,
+        productType: 1,
       }
     )
       .sort(sortOptions)
@@ -87,9 +100,22 @@ const getProduct = async (req, res) => {
       throw Error("Invalid ID!!!");
     }
 
-    const product = await Product.findOne({ _id: id }).populate("category", {
-      name: 1,
-    });
+    const product = await Product.findOne({ _id: id })
+      .populate("category", {
+        name: 1,
+      })
+      .populate("createdBy", {
+        firstName: 1,
+        lastName: 1,
+        email: 1,
+        role: 1,
+        profileImgURL: 1,
+        profileImageURL: 1,
+      });
+    console.log(
+      "file: productController.js:116 -> getProduct -> product",
+      product
+    );
 
     res.status(200).json({ product });
   } catch (error) {

@@ -81,6 +81,8 @@ import PublisherProducts from "./page/publisher/pages/products/PublisherProducts
 import LenderProducts from "./page/lender/pages/products/LenderProducts";
 import Lenders from "./page/admin/pages/lender/Lenders";
 import Publishers from "./page/admin/pages/publisher/Publishers";
+import EditPublisherProduct from "./page/publisher/pages/products/EditPublisherProduct";
+import EditLenderProduct from "./page/lender/pages/products/EditLenderProduct";
 
 function App() {
   const { user } = useSelector((state) => state.user);
@@ -250,7 +252,7 @@ function LenderRoutes() {
         <Route index element={<LenderHome />} />
         <Route path="books" element={<LenderProducts />} />
         <Route path="books/add" element={<AddLendProducts />} />
-        <Route path="books/edit/:id" element={<EditProduct />} />
+        <Route path="books/edit/:id" element={<EditLenderProduct />} />
 
         <Route path="orders" element={<Orders />} />
         <Route path="orders/detail/:id" element={<OrderDetails />} />
@@ -273,7 +275,7 @@ function PublisherRoutes() {
         <Route index element={<PublisherHome />} />
         <Route path="books" element={<PublisherProducts />} />
         <Route path="books/add" element={<AddPublishProducts />} />
-        <Route path="books/edit/:id" element={<EditProduct />} />
+        <Route path="books/edit/:id" element={<EditPublisherProduct />} />
 
         <Route path="orders" element={<Orders />} />
         <Route path="orders/detail/:id" element={<OrderDetails />} />

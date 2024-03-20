@@ -23,6 +23,7 @@ const Dashboard = () => {
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [sort, setSort] = useState("");
+  const [productType, setProductType] = useState("");
 
   useEffect(() => {
     const categoryParam = searchParams.get("category");
@@ -30,12 +31,14 @@ const Dashboard = () => {
     const searchParam = searchParams.get("search");
     const sortParam = searchParams.get("sort");
     const page = searchParams.get("page");
+    const productTypeParam = searchParams.get("productType");
 
     setCategory(categoryParam ? categoryParam.split(",") : []);
     setPrice(priceParam || "");
     setSort(sortParam || "");
     setPage(page || 1);
     setSearch(searchParam || "");
+    setProductType(productTypeParam || "");
   }, []);
 
   const handleClick = (param, value) => {
@@ -50,6 +53,11 @@ const Dashboard = () => {
       if (param === "sort") {
         setSort("");
         params.delete("page");
+        setPage(1);
+      }
+      if (param === "productType") {
+        setProductType("");
+        params.delete("productType");
         setPage(1);
       }
     } else {
@@ -95,6 +103,11 @@ const Dashboard = () => {
           params.delete("page");
           setPage(1);
         }
+        if (param === "productType") {
+          setProductType(value);
+          params.delete("page");
+          setPage(1);
+        }
       }
     }
 
@@ -110,6 +123,7 @@ const Dashboard = () => {
     params.delete("search");
     params.delete("sort");
     params.delete("page");
+    params.delete("productType");
 
     setSearchParams(params);
 
@@ -117,6 +131,7 @@ const Dashboard = () => {
     setPrice("");
     setCategory([]);
     setPage(1);
+    setProductType("");
   };
 
   useEffect(() => {
@@ -136,6 +151,7 @@ const Dashboard = () => {
         filters={category}
         handleClick={handleClick}
         price={price}
+        productType={productType}
       />
       <div className="w-full lg:w-4/5 pb-5">
         <div className="flex flex-col lg:flex-row gap-5 items-center justify-between">

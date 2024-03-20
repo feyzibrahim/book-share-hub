@@ -67,7 +67,7 @@ const AddPublishProducts = () => {
     formData.append("category", category);
     formData.append("offer", offer);
     formData.append("status", status.toLowerCase());
-    formData.append("productType", "rent");
+    formData.append("productType", "sell");
 
     formData.append("imageURL", imageURL);
 
@@ -252,7 +252,7 @@ const AddPublishProducts = () => {
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
               />
-              <p className="admin-label">Offer</p>
+              <p className="admin-label">Offer (%)</p>
               <input
                 type="number"
                 placeholder="Type Book offer here"

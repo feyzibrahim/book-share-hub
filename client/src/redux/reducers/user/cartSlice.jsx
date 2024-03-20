@@ -29,7 +29,9 @@ const cartSlice = createSlice({
     calculateTotalPrice: (state) => {
       let sum = state.cart.reduce(
         (total, item) =>
-          total + (item.product.price + item.product.markup) * item.quantity,
+          total + item.product.markup
+            ? (item.product.price + item.product.markup) * item.quantity
+            : item.product.price * item.quantity,
         0
       );
       state.tax = sum * 0.08;

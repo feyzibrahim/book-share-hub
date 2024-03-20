@@ -4,7 +4,13 @@ import axios from "axios";
 import { URL } from "../Common/api";
 import { config } from "../Common/configurations";
 
-const FilterUserDashboard = ({ filters, price, handleClick, clearFilters }) => {
+const FilterUserDashboard = ({
+  filters,
+  price,
+  handleClick,
+  clearFilters,
+  productType,
+}) => {
   const [categories, setCategories] = useState([]);
 
   const loadCategories = async () => {
@@ -19,8 +25,38 @@ const FilterUserDashboard = ({ filters, price, handleClick, clearFilters }) => {
   return (
     <div className="lg:w-1/5">
       <ul className="hidden lg:block">
+        <li className="uppercase">Type</li>
+        <li className="category-li">
+          <input
+            type="radio"
+            name="productType"
+            value=""
+            checked={productType === ""}
+            onChange={(e) => handleClick("productType", e.target.value)}
+          />{" "}
+          All
+        </li>
+        <li className="category-li">
+          <input
+            type="radio"
+            name="productType"
+            value="sell"
+            checked={productType === "sell"}
+            onChange={(e) => handleClick("productType", e.target.value)}
+          />{" "}
+          Buy
+        </li>
+        <li className="category-li">
+          <input
+            type="radio"
+            name="productType"
+            value="rent"
+            checked={productType === "rent"}
+            onChange={(e) => handleClick("productType", e.target.value)}
+          />{" "}
+          Rent
+        </li>
         <li className="uppercase">Category</li>
-
         {categories.map((item) => {
           return (
             <li className="category-li" key={item._id}>
