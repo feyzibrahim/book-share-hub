@@ -17,6 +17,19 @@ const ProfileImage = ({ user, radius }) => {
       </div>
     );
   }
+  if (user.image_url) {
+    return (
+      <div
+        className={`h-full w-full rounded-${imageRadius} shrink-0 overflow-clip`}
+      >
+        <img
+          src={`${URL}/img/${user.image_url}`}
+          alt="profile"
+          className="h-full w-full object-cover"
+        />
+      </div>
+    );
+  }
 
   if (user.profileImageURL) {
     return (

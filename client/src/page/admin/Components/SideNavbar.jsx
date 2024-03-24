@@ -12,6 +12,7 @@ import { FaUsersCog, FaUsers, FaUserTie } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../redux/actions/userActions";
 import { BiBook } from "react-icons/bi";
+import { GiPartyFlags } from "react-icons/gi";
 
 const SideNavbar = () => {
   const { user } = useSelector((state) => state.user);
@@ -58,6 +59,10 @@ const SideNavbar = () => {
         <NavLink className="side-nav-link-sp" to="payments">
           <BsCreditCard />
           Payments
+        </NavLink>
+        <NavLink className="side-nav-link-sp" to="fests">
+          <GiPartyFlags />
+          Fests
         </NavLink>
         <p className="side-nav-sub-title">User Management</p>
         {user && user.role === "superAdmin" && (

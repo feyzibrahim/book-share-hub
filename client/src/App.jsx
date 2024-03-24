@@ -84,6 +84,10 @@ import Publishers from "./page/admin/pages/publisher/Publishers";
 import EditPublisherProduct from "./page/publisher/pages/products/EditPublisherProduct";
 import EditLenderProduct from "./page/lender/pages/products/EditLenderProduct";
 
+import FestsPage from "./page/admin/pages/fests/FestsPage";
+import CreateFest from "./page/admin/pages/fests/CreateFest";
+import EditFest from "./page/admin/pages/fests/EditFest";
+
 function App() {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -233,6 +237,10 @@ function AdminRoutes() {
         <Route path="coupon/create" element={<CreateCoupon />} />
         <Route path="coupon/edit/:id" element={<EditCoupon />} />
 
+        <Route path="fests" element={<FestsPage />} />
+        <Route path="fests/create" element={<CreateFest />} />
+        <Route path="fests/edit/:id" element={<EditFest />} />
+
         <Route path="banner" element={<Banner />} />
         <Route path="payments" element={<Payments />} />
         <Route path="customers" element={<Customers />} />
@@ -245,6 +253,7 @@ function AdminRoutes() {
     </Routes>
   );
 }
+
 function LenderRoutes() {
   return (
     <Routes>
@@ -268,6 +277,7 @@ function LenderRoutes() {
     </Routes>
   );
 }
+
 function PublisherRoutes() {
   return (
     <Routes>

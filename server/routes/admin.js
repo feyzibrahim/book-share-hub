@@ -57,6 +57,13 @@ const {
   editCoupon,
   deleteCoupon,
 } = require("../controllers/admin/couponController");
+const {
+  getFests,
+  getFest,
+  addFest,
+  editFest,
+  deleteFest,
+} = require("../controllers/admin/festController");
 const { generateExcel } = require("../controllers/admin/reportController");
 const {
   readRevenueData,
@@ -127,6 +134,13 @@ router.get("/coupon/:id", getCoupon);
 router.delete("/coupon/:id", deleteCoupon);
 router.patch("/coupon/:id", editCoupon);
 router.post("/coupon", addCoupon);
+
+// Fest Controller functions mounting
+router.get("/fests", getFests);
+router.get("/fest/:id", getFest);
+router.delete("/fest/:id", deleteFest);
+router.patch("/fest/:id", editFest);
+router.post("/fest", addFest);
 
 // Generate Orders Excel
 router.get("/generateReport", generateExcel);

@@ -1,26 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { AiOutlinePlus } from "react-icons/ai";
-import BreadCrumbs from "../../Components/BreadCrumbs";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import FilterArray from "../../Components/FilterArray";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import TableRow from "./TableRow";
-import { getCoupons } from "../../../../redux/actions/admin/couponsAction";
-import Loading from "../../../../components/Loading";
+import FilterArray from "../../Components/FilterArray";
 import SearchBar from "../../../../components/SearchBar";
+import Pagination from "../../../../components/Pagination";
 import RangeDatePicker from "../../../../components/RangeDatePicker";
 import ClearFilterButton from "../../Components/ClearFilterButton";
-import Pagination from "../../../../components/Pagination";
+import BreadCrumbs from "../../Components/BreadCrumbs";
+import { AiOutlinePlus } from "react-icons/ai";
+import { getFests } from "../../../../redux/actions/admin/festsAction";
 
-const Coupon = () => {
+const FestsPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { coupons, loading, error, totalAvailableCoupons } = useSelector(
-    (state) => state.coupons
+  const { fests, loading, error, totalAvailableFests } = useSelector(
+    (state) => state.fests
   );
 
-  // Filtering
   const [startingDate, setStartingDate] = useState("");
   const [endingDate, setEndingDate] = useState("");
   const [search, setSearch] = useState("");
@@ -47,7 +45,6 @@ const Coupon = () => {
     }
     setSearchParams(params.toString() ? "?" + params.toString() : "");
   };
-
   // Removing filters
   const removeFilters = () => {
     const params = new URLSearchParams(window.location.search);
@@ -63,17 +60,11 @@ const Coupon = () => {
   };
 
   useEffect(() => {
-    dispatch(getCoupons(searchParams));
+    dispatch(getFests(searchParams));
     const params = new URLSearchParams(window.location.search);
     const pageNumber = params.get("page");
     setPage(parseInt(pageNumber || 1));
   }, [searchParams]);
-
-  if (!coupons) {
-    if (loading) {
-      return <Loading />;
-    }
-  }
 
   return (
     <>
@@ -83,11 +74,10 @@ const Coupon = () => {
           search={search}
           setSearch={setSearch}
         />
-        {/* Header */}
         <div className="flex justify-between items-center font-semibold">
           <div>
-            <h1 className="font-bold text-2xl">Coupon</h1>
-            <BreadCrumbs list={["Dashboard", "Coupon List"]} />
+            <h1 className="font-bold text-2xl">Fests</h1>
+            <BreadCrumbs list={["Dashboard", "Fests List"]} />
           </div>
           <div className="flex gap-3">
             <button
@@ -95,14 +85,13 @@ const Coupon = () => {
               onClick={() => navigate("create")}
             >
               <AiOutlinePlus />
-              Create New Coupon
+              Create New Fests
             </button>
           </div>
         </div>
-        {/* Filters */}
         <div className="lg:flex justify-between items-center font-semibold">
           <FilterArray
-            list={["all", "active", "blocked"]}
+            list={["all", "active", "expired"]}
             handleClick={handleFilter}
           />
           <div className="flex my-2 gap-3">
@@ -116,31 +105,24 @@ const Coupon = () => {
             <ClearFilterButton handleClick={removeFilters} />
           </div>
         </div>
-        <div className="overflow-x-scroll lg:overflow-hidden bg-white rounded-lg">
-          {coupons && (
+        <div className="overflow-x-scroll  bg-white rounded-lg">
+          {fests && (
             <table className="w-full min-w-max table-auto">
               <thead className="font-normal">
                 <tr className="border-b border-gray-200">
-                  <th className="admin-table-head">No:</th>
-                  <th className="admin-table-head">Code</th>
-                  <th className="admin-table-head">Type</th>
-                  <th className="admin-table-head">Value</th>
-                  <th className="admin-table-head">Status</th>
-                  <th className="admin-table-head">Created On</th>
-                  <th className="admin-table-head">Expiry</th>
+                  <th className="admin-table-head w-52">Name</th>
+                  <th className="admin-table-head">Location</th>
+                  <th className="admin-table-head">Date</th>
+                  <th className="admin-table-head">Organizer</th>
+                  <th className="admin-table-head">Created</th>
                   <th className="admin-table-head">Action</th>
                 </tr>
               </thead>
               <tbody>
-                {coupons.map((item, index) => {
-                  return (
-                    <TableRow
-                      coupon={item}
-                      key={index}
-                      index={index}
-                      length={coupons.length}
-                    />
-                  );
+                {fests.map((fest, index) => {
+                  const isLast = index === fests.length - 1;
+
+                  return <TableRow isLast={isLast} fest={fest} key={index} />;
                 })}
               </tbody>
             </table>
@@ -151,7 +133,7 @@ const Coupon = () => {
             handleClick={handleFilter}
             page={page}
             number={10}
-            totalNumber={totalAvailableCoupons}
+            totalNumber={totalAvailableFests}
           />
         </div>
       </div>
@@ -159,4 +141,4 @@ const Coupon = () => {
   );
 };
 
-export default Coupon;
+export default FestsPage;
