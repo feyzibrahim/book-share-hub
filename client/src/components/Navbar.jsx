@@ -76,6 +76,12 @@ const Navbar = () => {
         <div className="flex sm:gap-6 items-center relative">
           {user ? (
             <>
+              <NavLink
+                to="/fests"
+                className="hover:text-blue-400 p-2 font-medium"
+              >
+                Fests
+              </NavLink>
               <NavLink to="/" className="hover:text-blue-400 p-2">
                 <AiOutlineHome className="text-xl" />
               </NavLink>

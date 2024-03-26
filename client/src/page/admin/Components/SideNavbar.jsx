@@ -26,7 +26,7 @@ const SideNavbar = () => {
   };
 
   return (
-    <>
+    <div className="h-full overflow-y-scroll scrollbar-hide pb-20">
       <div className="w-40 flex items-center cursor-pointer opacity-70 hover:opacity-100">
         <ExIphoneLogo />
       </div>
@@ -75,9 +75,9 @@ const SideNavbar = () => {
           <FaUsers />
           Customers
         </NavLink>
-        <NavLink className="side-nav-link-sp" to="lenders">
+        <NavLink className="side-nav-link-sp" to="Renters">
           <RiUserHeartLine />
-          Lenders
+          Renters
         </NavLink>
         <NavLink className="side-nav-link-sp" to="publishers">
           <FaUserTie />
@@ -88,10 +88,7 @@ const SideNavbar = () => {
           <FiSettings />
           Settings
         </NavLink>
-        <NavLink className="side-nav-link-sp" to="help">
-          <FiHelpCircle />
-          Help
-        </NavLink>
+
         <button
           className="side-nav-link-sp cursor-pointer w-full"
           onClick={handleLogout}
@@ -100,7 +97,7 @@ const SideNavbar = () => {
           Logout
         </button>
       </div>
-    </>
+    </div>
   );
 };
 

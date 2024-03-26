@@ -72,8 +72,8 @@ const getCustomers = async (req, res) => {
   }
 };
 
-// Getting all Lenders to list on admin dashboard
-const getLenders = async (req, res) => {
+// Getting all Renters to list on admin dashboard
+const getRenters = async (req, res) => {
   try {
     const {
       status,
@@ -120,7 +120,7 @@ const getLenders = async (req, res) => {
 
     // Getting all users
     const customers = await User.find(
-      { role: "lender", ...filter },
+      { role: "renter", ...filter },
       {
         password: 0,
         dateOfBirth: 0,
@@ -134,7 +134,7 @@ const getLenders = async (req, res) => {
       .sort({ createdAt: -1 });
 
     const totalAvailableUsers = await User.countDocuments({
-      role: "lender",
+      role: "renter",
       ...filter,
     });
 
@@ -302,6 +302,6 @@ module.exports = {
   deleteCustomer,
   updateCustomer,
   blockOrUnBlockCustomer,
-  getLenders,
+  getRenters,
   getPublishers,
 };

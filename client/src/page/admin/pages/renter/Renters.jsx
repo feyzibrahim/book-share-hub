@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BsCaretRightFill } from "react-icons/bs";
 import { useSearchParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getLenders } from "../../../../redux/actions/admin/customerAction";
+import { getRenters } from "../../../../redux/actions/admin/customerAction";
 import TableRow from "./TableRow";
 import BlockOrUnBlock from "./BlockOrUnBlock";
 import Modal from "../../../../components/Modal";
@@ -12,7 +12,7 @@ import Pagination from "../../../../components/Pagination";
 import RangeDatePicker from "../../../../components/RangeDatePicker";
 import ClearFilterButton from "../../Components/ClearFilterButton";
 
-const Lenders = () => {
+const Renters = () => {
   const dispatch = useDispatch();
 
   const { customers, loading, error, totalAvailableUsers } = useSelector(
@@ -67,7 +67,7 @@ const Lenders = () => {
   };
 
   useEffect(() => {
-    dispatch(getLenders(searchParams));
+    dispatch(getRenters(searchParams));
     const params = new URLSearchParams(window.location.search);
     const pageNumber = params.get("page");
     setPage(parseInt(pageNumber || 1));
@@ -93,7 +93,7 @@ const Lenders = () => {
         />
         <div className="flex justify-between items-center font-semibold">
           <div>
-            <h1 className="font-bold text-2xl">Lenders</h1>
+            <h1 className="font-bold text-2xl">Renters</h1>
             <div className="flex items-center gap-2 mt-2 mb-4 text-gray-500">
               <p className="text-blue-500 font-semibold">Dashboard</p>
               <span>
@@ -162,4 +162,4 @@ const Lenders = () => {
   );
 };
 
-export default Lenders;
+export default Renters;

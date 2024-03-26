@@ -12,7 +12,7 @@ import { getCategories } from "../../../../redux/actions/admin/categoriesAction"
 import { URL } from "@common/api";
 import toast from "react-hot-toast";
 
-const EditLenderProduct = () => {
+const EditRenterProduct = () => {
   const dispatch = useDispatch();
 
   const { id } = useParams();
@@ -513,4 +513,4 @@ const EditLenderProduct = () => {
   );
 };
 
-export default EditLenderProduct;
+export default EditRenterProduct;

@@ -28,12 +28,12 @@ export const getCustomers = createAsyncThunk(
     );
   }
 );
-export const getLenders = createAsyncThunk(
-  "customers/getLenders",
+export const getRenters = createAsyncThunk(
+  "customers/getRenters",
   async (queries, { rejectWithValue }) => {
     return commonReduxRequest(
       "get",
-      `/admin/lenders${queries && `?${queries}`}`,
+      `/admin/renters${queries && `?${queries}`}`,
       null,
       appJson,
       rejectWithValue

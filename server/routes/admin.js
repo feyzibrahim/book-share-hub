@@ -17,7 +17,7 @@ const {
   deleteCustomer,
   updateCustomer,
   blockOrUnBlockCustomer,
-  getLenders,
+  getRenters,
   getPublishers,
 } = require("../controllers/admin/customerController");
 const {
@@ -94,8 +94,8 @@ router.patch("/customer/:id", updateCustomer);
 router.post("/customer", upload.any(), addCustomer);
 router.patch("/customer-block-unblock/:id", blockOrUnBlockCustomer);
 
-// Lender
-router.get("/lenders", getLenders);
+// Renter
+router.get("/renters", getRenters);
 router.get("/publishers", getPublishers);
 
 // Category controller functions mounting them to corresponding route

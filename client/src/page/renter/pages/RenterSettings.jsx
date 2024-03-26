@@ -2,7 +2,7 @@ import React from "react";
 import ProfilePage from "../../../Common/settings/ProfilePage";
 import PasswordChange from "../../../Common/settings/PasswordChange";
 
-const LenderSettings = () => {
+const RenterSettings = () => {
   return (
     <div className="p-5 w-full h-screen overflow-auto">
       <h1 className="font-bold text-2xl">Settings</h1>
@@ -12,4 +12,4 @@ const LenderSettings = () => {
   );
 };
 
-export default LenderSettings;
+export default RenterSettings;

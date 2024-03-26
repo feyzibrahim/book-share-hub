@@ -30,7 +30,7 @@ const getProducts = async (req, res) => {
 
     const { _id, role } = jwt.verify(token, process.env.SECRET);
 
-    if (role === "lender" || role === "publisher") {
+    if (role === "renter" || role === "publisher") {
       filter.createdBy = _id;
     }
 

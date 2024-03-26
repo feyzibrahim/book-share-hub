@@ -72,6 +72,7 @@ const {
   readOrderReview,
 } = require("../controllers/user/reviewController");
 const { getCategories } = require("../controllers/user/categoryController");
+const { getFests } = require("../controllers/user/festController");
 
 const router = express.Router();
 
@@ -154,5 +155,8 @@ router.get("/order-review/:id", readOrderReview);
 
 // Category
 router.get("/categories", getCategories);
+
+// Fest
+router.get("/fests", getFests);
 
 module.exports = router;

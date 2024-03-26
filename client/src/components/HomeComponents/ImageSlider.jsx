@@ -11,7 +11,11 @@ const ImageSlider = () => {
   // Initial data loading
   const loadData = async () => {
     const { data } = await axios.get(`${URL}/public/banners`, config);
-    setItems(data.banners.images);
+    if (data) {
+      if (data.banners) {
+        setItems(data.banners.images);
+      }
+    }
   };
   useEffect(() => {
     loadData();

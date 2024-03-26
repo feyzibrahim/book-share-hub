@@ -4,7 +4,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import SmallDeviceNavbar from "./Components/SmallDeviceNavbar";
 
-const LenderDashboard = () => {
+const RenterDashboard = () => {
   const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
@@ -25,4 +25,4 @@ const LenderDashboard = () => {
   );
 };
 
-export default LenderDashboard;
+export default RenterDashboard;

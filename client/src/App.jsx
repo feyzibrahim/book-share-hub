@@ -27,6 +27,7 @@ import ForgetPassword from "./page/auth/ForgetPassword";
 import Dashboard from "./page/Dashboard";
 import ProductDetails from "./page/user/ProductDetails";
 import Cart from "./page/user/Cart";
+import UserFestsPage from "./page/user/fests";
 import Checkout from "./page/user/Checkout";
 import OrderHistory from "./page/user/OrderHistory";
 import ProfilePage from "./page/user/ProfilePage";
@@ -69,20 +70,21 @@ import EditCoupon from "./page/admin/pages/coupon/EditCoupon";
 import FindCoupons from "./page/user/profileDashboard/pages/findCoupons";
 import OrderConfirmation from "./page/user/components/OrderConfirmation";
 import SettingsPage from "./page/user/profileDashboard/pages/settings";
-import LenderDashboard from "./page/lender/LenderDashboard";
-import LenderHome from "./page/lender/pages/LenderHome";
-import AddLendProducts from "./page/lender/pages/products/AddLendProducts";
-import LenderSettings from "./page/lender/pages/LenderSettings";
+
+import RenterDashboard from "./page/renter/RenterDashboard";
+import RenterHome from "./page/renter/pages/RenterHome";
+import AddLendProducts from "./page/renter/pages/products/AddLendProducts";
+import RenterSettings from "./page/renter/pages/RenterSettings";
 import PublisherDashboard from "./page/publisher/PublisherDashboard";
 import PublisherHome from "./page/publisher/pages/PublisherHome";
 import PublisherSettings from "./page/publisher/pages/PublisherSettings";
 import AddPublishProducts from "./page/publisher/pages/products/AddPublishProducts";
 import PublisherProducts from "./page/publisher/pages/products/PublisherProducts";
-import LenderProducts from "./page/lender/pages/products/LenderProducts";
-import Lenders from "./page/admin/pages/lender/Lenders";
+import RenterProducts from "./page/renter/pages/products/RenterProducts";
+import Renters from "./page/admin/pages/renter/Renters";
 import Publishers from "./page/admin/pages/publisher/Publishers";
 import EditPublisherProduct from "./page/publisher/pages/products/EditPublisherProduct";
-import EditLenderProduct from "./page/lender/pages/products/EditLenderProduct";
+import EditRenterProduct from "./page/renter/pages/products/EditRenterProduct";
 
 import FestsPage from "./page/admin/pages/fests/FestsPage";
 import CreateFest from "./page/admin/pages/fests/CreateFest";
@@ -117,8 +119,8 @@ function App() {
     if (user.role === "admin" || user.role === "superAdmin") {
       return <Navigate to="/admin/" />;
     }
-    if (user.role === "lender") {
-      return <Navigate to="/lender/" />;
+    if (user.role === "renter") {
+      return <Navigate to="/renter/" />;
     }
     if (user.role === "publisher") {
       return <Navigate to="/publisher/" />;
@@ -134,6 +136,7 @@ function App() {
 
         <Routes>
           <Route path="/" element={<NavigateToProperRoute />} />
+          <Route path="/fests" element={<UserFestsPage />} />
 
           {/* Auth Pages */}
           <Route path="login" element={<Login />} />
@@ -186,12 +189,12 @@ function App() {
             <Route path="/admin" element={<Navigate to="/" />} />
           )}
 
-          {/* Lender Routes */}
+          {/* Renter Routes */}
 
-          {user && user.role === "lender" ? (
-            <Route path="/lender/*" element={<LenderRoutes />} />
+          {user && user.role === "renter" ? (
+            <Route path="/renter/*" element={<RenterRoutes />} />
           ) : (
-            <Route path="/lender" element={<Navigate to="/" />} />
+            <Route path="/renter" element={<Navigate to="/" />} />
           )}
           {user && user.role === "publisher" ? (
             <Route path="/publisher/*" element={<PublisherRoutes />} />
@@ -244,7 +247,7 @@ function AdminRoutes() {
         <Route path="banner" element={<Banner />} />
         <Route path="payments" element={<Payments />} />
         <Route path="customers" element={<Customers />} />
-        <Route path="lenders" element={<Lenders />} />
+        <Route path="Renters" element={<Renters />} />
         <Route path="publishers" element={<Publishers />} />
         <Route path="settings" element={<Settings />} />
         <Route path="help" element={<Help />} />
@@ -254,14 +257,14 @@ function AdminRoutes() {
   );
 }
 
-function LenderRoutes() {
+function RenterRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<LenderDashboard />}>
-        <Route index element={<LenderHome />} />
-        <Route path="books" element={<LenderProducts />} />
+      <Route path="/" element={<RenterDashboard />}>
+        <Route index element={<RenterHome />} />
+        <Route path="books" element={<RenterProducts />} />
         <Route path="books/add" element={<AddLendProducts />} />
-        <Route path="books/edit/:id" element={<EditLenderProduct />} />
+        <Route path="books/edit/:id" element={<EditRenterProduct />} />
 
         <Route path="orders" element={<Orders />} />
         <Route path="orders/detail/:id" element={<OrderDetails />} />
@@ -270,7 +273,7 @@ function LenderRoutes() {
           path="orders/return-requests/detail/:id"
           element={<OrderDetails />}
         />
-        <Route path="settings" element={<LenderSettings />} />
+        <Route path="settings" element={<RenterSettings />} />
         <Route path="help" element={<Help />} />
         <Route path="*" element={<Error404 />} />
       </Route>

@@ -13,7 +13,7 @@ import { AiOutlineCalendar } from "react-icons/ai";
 import OutsideTouchCloseComponent from "../../../components/OutsideTouchCloseComponent";
 import { debounce } from "time-loom";
 
-const LenderHome = () => {
+const RenterHome = () => {
   const { orders, loading, error } = useSelector((state) => state.orders);
 
   const dispatch = useDispatch();
@@ -51,7 +51,7 @@ const LenderHome = () => {
       <div className="p-5 w-full overflow-auto">
         <div className="flex justify-between items-center text-xs font-semibold pb-5">
           <div>
-            <h1 className="font-bold text-2xl">Lender | Dashboard</h1>
+            <h1 className="font-bold text-2xl">Renter | Dashboard</h1>
           </div>
           <div className="flex gap-3 relative">
             <button
@@ -165,4 +165,4 @@ const LenderHome = () => {
   );
 };
 
-export default LenderHome;
+export default RenterHome;

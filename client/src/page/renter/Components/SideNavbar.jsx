@@ -4,18 +4,12 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 import { RiDashboardLine } from "react-icons/ri";
 import { FiSettings, FiHelpCircle, FiLogOut } from "react-icons/fi";
-import { ImStack } from "react-icons/im";
-import { HiOutlineTicket } from "react-icons/hi";
-import { BsCardChecklist, BsCreditCard } from "react-icons/bs";
-import { AiOutlineTags } from "react-icons/ai";
-import { FaUsersCog, FaUsers } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
+import { BsCardChecklist } from "react-icons/bs";
+import { useDispatch } from "react-redux";
 import { logout } from "../../../redux/actions/userActions";
 import { BiBook } from "react-icons/bi";
 
 const SideNavbar = () => {
-  const { user } = useSelector((state) => state.user);
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -31,7 +25,7 @@ const SideNavbar = () => {
       </div>
       <div className="text-gray-600 font-semibold mt-5">
         <p className="side-nav-sub-title">Menu</p>
-        <NavLink className="side-nav-link-sp" to="/lender/">
+        <NavLink className="side-nav-link-sp" to="/Renter/">
           <RiDashboardLine />
           Dashboard
         </NavLink>

@@ -12,7 +12,7 @@ import SearchBar from "../../../../components/SearchBar";
 import RangeDatePicker from "../../../../components/RangeDatePicker";
 import ClearFilterButton from "../../Components/ClearFilterButton";
 
-const LenderProducts = () => {
+const RenterProducts = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -20,7 +20,7 @@ const LenderProducts = () => {
     (state) => state.products
   );
 
-  // Filteration
+  // Filtration
   const [startingDate, setStartingDate] = useState("");
   const [endingDate, setEndingDate] = useState("");
   const [search, setSearch] = useState("");
@@ -167,4 +167,4 @@ const LenderProducts = () => {
   );
 };
 
-export default LenderProducts;
+export default RenterProducts;
