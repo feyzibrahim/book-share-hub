@@ -125,7 +125,6 @@ const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const formData = req.body;
-    console.log("Updation: ", formData);
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw Error("Invalid ID!!!");

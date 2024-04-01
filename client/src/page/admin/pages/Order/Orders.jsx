@@ -130,13 +130,6 @@ const Orders = () => {
             <BreadCrumbs list={["Dashboard", "Orders"]} />
           </div>
           <div className="flex gap-3">
-            <button
-              className="admin-button-fl bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-blue-700"
-              onClick={toggleExportModal}
-            >
-              <FiDownload />
-              Export
-            </button>
             <ReturnRequestsButtonInOrders />
           </div>
         </div>

@@ -17,7 +17,7 @@ import RangeDatePicker from "../../../../components/RangeDatePicker";
 import ClearFilterButton from "../../Components/ClearFilterButton";
 import toast from "react-hot-toast";
 
-const Orders = () => {
+const OrdersRenter = () => {
   const dispatch = useDispatch();
 
   const { orders, loading, error, totalAvailableOrders } = useSelector(
@@ -130,13 +130,6 @@ const Orders = () => {
             <BreadCrumbs list={["Dashboard", "Orders"]} />
           </div>
           <div className="flex gap-3">
-            <button
-              className="admin-button-fl bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-blue-700"
-              onClick={toggleExportModal}
-            >
-              <FiDownload />
-              Export
-            </button>
             <ReturnRequestsButtonInOrders />
           </div>
         </div>
@@ -222,4 +215,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default OrdersRenter;

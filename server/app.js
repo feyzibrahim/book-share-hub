@@ -34,7 +34,7 @@ const adminRoutes = require("./routes/admin");
 const superAdminRoutes = require("./routes/superAdmin");
 const publicRoutes = require("./routes/public");
 const authRoutes = require("./routes/auth");
-const setupAdmin = require("./util/setupAdmin");
+const setupUsers = require("./util/setupUsers");
 // Auth middleware
 
 const { requireAuth, requireAdminAuth } = require("./middleware/requireAuth");
@@ -56,7 +56,7 @@ mongoose
     app.listen(process.env.PORT, () => {
       console.log(`Listening on Port: ${process.env.PORT} - DB Connected`);
     });
-    setupAdmin();
+    setupUsers();
   })
   .catch((error) => {
     console.log(error);

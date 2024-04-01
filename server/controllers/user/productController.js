@@ -112,10 +112,6 @@ const getProduct = async (req, res) => {
         profileImgURL: 1,
         profileImageURL: 1,
       });
-    console.log(
-      "file: productController.js:116 -> getProduct -> product",
-      product
-    );
 
     res.status(200).json({ product });
   } catch (error) {

@@ -40,17 +40,14 @@ const CreateFest = () => {
       city: "",
       country: "",
     },
-    start_date: null,
-    end_date: null,
+    start_date: "",
+    end_date: "",
     website: "",
     organizer: "",
-    guests: [
-      {
-        name: "",
-        genre: "",
-        description: "",
-      },
-    ],
+    guests: [],
+    sponsor: [],
+    contactInfo: "",
+    time: "",
   };
 
   const validationSchema = Yup.object().shape({
@@ -65,13 +62,18 @@ const CreateFest = () => {
     end_date: Yup.date().required("End date is required"),
     website: Yup.string().url("Invalid URL format"),
     organizer: Yup.string(),
-    guests: Yup.array().of(
-      Yup.object().shape({
-        name: Yup.string().required("Guest name is required"),
-        genre: Yup.string(),
-        description: Yup.string(),
-      })
-    ),
+    guests: Yup.array()
+      .of(
+        Yup.object().shape({
+          name: Yup.string().required("Guest name is required"),
+          genre: Yup.string(),
+          description: Yup.string(),
+        })
+      )
+      .optional(),
+    sponsor: Yup.array().of(Yup.string()).optional(),
+    contactInfo: Yup.string().optional(),
+    time: Yup.string().optional(),
   });
 
   return (
@@ -155,7 +157,6 @@ const CreateFest = () => {
                   className="text-sm text-red-500"
                 />
               </div>
-              {/* here */}
               <div className="admin-div">
                 {/* Guests */}
                 <p className="admin-label">Guests</p>
@@ -163,7 +164,7 @@ const CreateFest = () => {
                   {({ push, remove, form }) => (
                     <div>
                       {form.values.guests.map((guest, index) => (
-                        <div key={index} className="flex gap-1">
+                        <div key={index} className="flex gap-1 border-b pb-2">
                           <div className="w-full">
                             <Field
                               name={`guests.${index}.name`}
@@ -221,10 +222,66 @@ const CreateFest = () => {
                   )}
                 </FieldArray>
               </div>
+              <div className="admin-div">
+                {/* Guests */}
+                <p className="admin-label">Sponsor</p>
+                <FieldArray name="sponsor">
+                  {({ push, remove, form }) => (
+                    <div>
+                      {form.values.sponsor.map((sponsor, index) => (
+                        <div key={index} className="flex gap-1">
+                          <div className="w-full">
+                            <Field
+                              name={`sponsor.${index}`}
+                              placeholder="Enter Sponsor Name"
+                              className="admin-input"
+                            />
+                            <ErrorMessage
+                              name={`sponsor.${index}`}
+                              component="span"
+                              className="text-sm text-red-500"
+                            />
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => remove(index)}
+                            className="admin-button-fl bg-gray-200 text-red-500 h-fit mt-2"
+                          >
+                            <BiTrash />
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        className=" mt-2 admin-button-fl bg-blue-700 text-white "
+                        onClick={() => push("")}
+                      >
+                        Add New Sponsor
+                      </button>
+                    </div>
+                  )}
+                </FieldArray>
+              </div>
             </div>
 
             <div className="lg:w-1/3">
               <div className="admin-div">
+                <p>
+                  <label htmlFor="location.address" className="admin-label">
+                    Contact Info
+                  </label>
+                </p>
+                <Field
+                  name="contactInfo"
+                  placeholder="Enter festival address"
+                  className="admin-input"
+                />
+                <ErrorMessage
+                  name="contactInfo"
+                  component="span"
+                  className="text-sm text-red-500"
+                />
                 <p>
                   <label htmlFor="location.address" className="admin-label">
                     Address
@@ -305,6 +362,22 @@ const CreateFest = () => {
                 />
                 <ErrorMessage
                   name="end_date"
+                  component="span"
+                  className="text-sm text-red-500"
+                />
+                <p>
+                  <label htmlFor="end_date" className="admin-label">
+                    Time
+                  </label>
+                </p>
+                <Field
+                  name="time"
+                  type="time"
+                  placeholder="Select end date"
+                  className="admin-input"
+                />
+                <ErrorMessage
+                  name="time"
                   component="span"
                   className="text-sm text-red-500"
                 />

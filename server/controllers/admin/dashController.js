@@ -73,12 +73,14 @@ const readUserCount = async (req, res) => {
   try {
     const numberOfDates = req.query.numberOfDates || 7;
 
-    const userCount = await User.find({ role: "user" }).count();
+    const userCount = await User.find({
+      role: { $in: ["buyer", "renter", "publisher"] },
+    }).count();
 
     const userCountsByDay = await User.aggregate([
       {
         $match: {
-          role: "user",
+          role: { $in: ["buyer", "renter", "publisher"] },
           createdAt: {
             $gte: moment().subtract(numberOfDates, "days").toDate(),
             $lte: new Date(),

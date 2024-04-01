@@ -89,6 +89,11 @@ import EditRenterProduct from "./page/renter/pages/products/EditRenterProduct";
 import FestsPage from "./page/admin/pages/fests/FestsPage";
 import CreateFest from "./page/admin/pages/fests/CreateFest";
 import EditFest from "./page/admin/pages/fests/EditFest";
+import FestDetails from "./page/user/fests/FestDetails";
+import AdminFeedbackPage from "./page/admin/pages/fests/feedback/AdminFeedbackPage";
+import OrdersPublisher from "./page/publisher/pages/Order/OrdersPublisher";
+import RentBook from "./page/user/rent";
+import OrdersRenter from "./page/renter/pages/Order/OrdersRenter";
 
 function App() {
   const { user } = useSelector((state) => state.user);
@@ -137,6 +142,7 @@ function App() {
         <Routes>
           <Route path="/" element={<NavigateToProperRoute />} />
           <Route path="/fests" element={<UserFestsPage />} />
+          <Route path="/fests/:id" element={<FestDetails />} />
 
           {/* Auth Pages */}
           <Route path="login" element={<Login />} />
@@ -163,6 +169,10 @@ function App() {
           <Route
             path="/buy-now"
             element={<ProtectedRoute element={<BuyNow />} />}
+          />
+          <Route
+            path="/rent"
+            element={<ProtectedRoute element={<RentBook />} />}
           />
 
           <Route
@@ -243,6 +253,7 @@ function AdminRoutes() {
         <Route path="fests" element={<FestsPage />} />
         <Route path="fests/create" element={<CreateFest />} />
         <Route path="fests/edit/:id" element={<EditFest />} />
+        <Route path="fests/edit/:id/feedback" element={<AdminFeedbackPage />} />
 
         <Route path="banner" element={<Banner />} />
         <Route path="payments" element={<Payments />} />
@@ -266,7 +277,7 @@ function RenterRoutes() {
         <Route path="books/add" element={<AddLendProducts />} />
         <Route path="books/edit/:id" element={<EditRenterProduct />} />
 
-        <Route path="orders" element={<Orders />} />
+        <Route path="orders" element={<OrdersRenter />} />
         <Route path="orders/detail/:id" element={<OrderDetails />} />
         <Route path="orders/return-requests" element={<ReturnRequests />} />
         <Route
@@ -290,7 +301,7 @@ function PublisherRoutes() {
         <Route path="books/add" element={<AddPublishProducts />} />
         <Route path="books/edit/:id" element={<EditPublisherProduct />} />
 
-        <Route path="orders" element={<Orders />} />
+        <Route path="orders" element={<OrdersPublisher />} />
         <Route path="orders/detail/:id" element={<OrderDetails />} />
         <Route path="orders/return-requests" element={<ReturnRequests />} />
         <Route

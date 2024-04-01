@@ -21,6 +21,7 @@ const {
   generateOrderInvoice,
   orderCount,
   buyNow,
+  rentBook,
 } = require("../controllers/user/orderController");
 
 const {
@@ -43,6 +44,7 @@ const {
   createRazerPayOrder,
   verifyPayment,
   getKey,
+  verifyPaymentWallet,
 } = require("../controllers/user/paymentController");
 
 const {
@@ -72,7 +74,12 @@ const {
   readOrderReview,
 } = require("../controllers/user/reviewController");
 const { getCategories } = require("../controllers/user/categoryController");
-const { getFests } = require("../controllers/user/festController");
+const {
+  getFests,
+  getFest,
+  joinFest,
+  addFeedback,
+} = require("../controllers/user/festController");
 
 const router = express.Router();
 
@@ -102,6 +109,7 @@ router.post("/request-return/:id", requestReturn);
 router.get("/order-invoice/:id", generateOrderInvoice);
 router.get("/order-count/", orderCount);
 router.post("/buy-now/:id", buyNow);
+router.post("/rent/:id", rentBook);
 
 // Cart
 router.get("/cart", getCart);
@@ -126,8 +134,9 @@ router.patch("/address/:id", updateAddress);
 
 // RazerPay Payment
 router.post("/razor-order", createRazerPayOrder);
-router.post("/razor-verify", verifyPayment);
 router.get("/razor-key", getKey);
+router.post("/razor-verify", verifyPayment);
+router.post("/razor-verify-wallet", verifyPaymentWallet);
 
 // Wallet
 router.get("/wallet", getWallet);
@@ -158,5 +167,8 @@ router.get("/categories", getCategories);
 
 // Fest
 router.get("/fests", getFests);
+router.get("/fests/:id", getFest);
+router.post("/fests/join/:id", joinFest);
+router.post("/fests/feedback/:id", addFeedback);
 
 module.exports = router;

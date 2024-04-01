@@ -17,7 +17,7 @@ import RangeDatePicker from "../../../../components/RangeDatePicker";
 import ClearFilterButton from "../../Components/ClearFilterButton";
 import toast from "react-hot-toast";
 
-const Orders = () => {
+const OrdersPublisher = () => {
   const dispatch = useDispatch();
 
   const { orders, loading, error, totalAvailableOrders } = useSelector(
@@ -222,4 +222,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default OrdersPublisher;

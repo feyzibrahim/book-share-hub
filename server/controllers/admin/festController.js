@@ -1,5 +1,7 @@
 const Fest = require("../../model/festModel");
 const mongoose = require("mongoose");
+const { sendFestivalAnnouncementEmail } = require("../../util/mailFunction");
+const User = require("../../model/userModel");
 
 // Getting all fests
 const getFests = async (req, res) => {
@@ -38,9 +40,8 @@ const getFests = async (req, res) => {
 
     const skip = (page - 1) * limit;
 
-    const fests = await Fest.find(filter, {
-      description: 0,
-    })
+    const fests = await Fest.find(filter)
+      .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
@@ -61,7 +62,14 @@ const getFest = async (req, res) => {
       throw Error("Invalid ID!!!");
     }
 
-    const fest = await Fest.findOne({ _id: id });
+    const fest = await Fest.findOne({ _id: id }).populate({
+      path: "feedback",
+      populate: {
+        path: "user",
+        model: "User",
+        select: "email firstName lastName profileImageURL",
+      },
+    });
 
     return res.status(200).json({ fest });
   } catch (error) {
@@ -72,16 +80,27 @@ const getFest = async (req, res) => {
 // Creating new fest
 const addFest = async (req, res) => {
   try {
-    const body = req.body;
-    console.log("file: festController.js:76 -> addFest -> body", body);
-    const imgURL = req?.file?.filename;
-    console.log("file: festController.js:78 -> addFest -> imgURL", imgURL);
+    const { start_date, time, ...rest } = req.body;
 
-    if (imgURL) {
-      formData = { ...formData, image_url: imgURL };
-    }
+    const startDateWithTime = new Date(`${start_date}T${time}`);
 
-    const fest = await Fest.create(body);
+    const festData = {
+      time: startDateWithTime,
+      ...rest,
+    };
+
+    const fest = await Fest.create(festData);
+
+    const users = await User.find({
+      role: { $in: ["buyer", "renter", "publisher"] },
+    });
+
+    // Extract emails from the users
+    const emails = users.map((user) => user.email);
+
+    emails.map((em) => {
+      sendFestivalAnnouncementEmail(em, start_date, time, fest.name);
+    });
 
     return res.status(200).json({ fest });
   } catch (error) {
@@ -98,17 +117,9 @@ const editFest = async (req, res) => {
       throw Error("Invalid ID!!!");
     }
 
-    let formData = req.body;
-    const imgURL = req?.file?.filename;
-    console.log("file: festController.js:78 -> addFest -> imgURL", imgURL);
-
-    if (imgURL) {
-      formData = { ...formData, image_url: imgURL };
-    }
-
     const fest = await Fest.findOneAndUpdate(
       { _id: id },
-      { $set: { ...formData } },
+      { $set: { ...req.body } },
       { new: true }
     );
 

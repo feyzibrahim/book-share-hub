@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AiOutlineCalendar, AiOutlinePlus } from "react-icons/ai";
+import { AiOutlinePlus } from "react-icons/ai";
 import { FiDownload } from "react-icons/fi";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import BreadCrumbs from "../../Components/BreadCrumbs";
@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from "react-redux";
 import date from "date-and-time";
 
 import { getPayments } from "../../../../redux/actions/admin/paymentAction";
-import { BsFilterRight } from "react-icons/bs";
 import StatusComponent from "../../../../components/StatusComponent";
 import FilterArray from "../../Components/FilterArray";
 import SearchBar from "../../../../components/SearchBar";
@@ -85,19 +84,6 @@ const Payments = () => {
             <h1 className="font-bold text-2xl">Payments</h1>
             <BreadCrumbs list={["Dashboard", "Payments"]} />
           </div>
-          <div className="flex gap-3">
-            <button className="admin-button-fl bg-gray-200 text-blue-700">
-              <FiDownload />
-              Export
-            </button>
-            <button
-              className="admin-button-fl bg-blue-700 text-white"
-              onClick={() => navigate("create")}
-            >
-              <AiOutlinePlus />
-              Create Order
-            </button>
-          </div>
         </div>
         <div className="lg:flex justify-between items-center font-semibold">
           <FilterArray
@@ -122,7 +108,7 @@ const Payments = () => {
                 <tr className="border-b border-gray-200">
                   <th className="admin-table-head">No:</th>
                   <th className="admin-table-head">User name</th>
-                  <th className="admin-table-head">Total Price</th>
+                  <th className="admin-table-head">Amount</th>
                   <th className="admin-table-head">Date</th>
                   <th className="admin-table-head">Payment Mode</th>
                   <th className="admin-table-head w-80">Payment Id</th>
@@ -151,7 +137,7 @@ const Payments = () => {
                         </p>
                       </td>
                       <td className="admin-table-row">
-                        {item.order.totalPrice}₹
+                        {item.order?.totalPrice ?? item?.amount ?? 0}₹
                       </td>
                       <td className="admin-table-row">
                         {date.format(new Date(item.createdAt), "MMM DD YYYY")}

@@ -46,13 +46,11 @@ const EditFest = () => {
     end_date: "",
     website: "",
     organizer: "",
-    guests: [
-      {
-        name: "",
-        genre: "",
-        description: "",
-      },
-    ],
+    guests: [],
+    sponsor: [],
+    contactInfo: "",
+    time: "",
+    status: "",
   });
 
   useEffect(() => {
@@ -82,6 +80,10 @@ const EditFest = () => {
             website: festData?.website ?? "",
             organizer: festData?.organizer ?? "",
             guests: festData?.guests ?? [],
+            sponsor: festData?.sponsor ?? [],
+            contactInfo: festData?.contactInfo ?? "",
+            time: festData?.time ? festData.time : "",
+            status: festData.status ? festData.status : "",
           });
         }
       } catch (error) {
@@ -110,6 +112,9 @@ const EditFest = () => {
         description: Yup.string(),
       })
     ),
+    sponsor: Yup.array().of(Yup.string()).optional(),
+    contactInfo: Yup.string().optional(),
+    time: Yup.string().optional(),
   });
 
   return (
@@ -130,6 +135,12 @@ const EditFest = () => {
             <BreadCrumbs list={["Dashboard", "Fests List", "Edit Fest"]} />
           </div>
           <div className="flex gap-3">
+            <button
+              className="btn-blue-border-no-pad px-5"
+              onClick={() => navigate("feedback")}
+            >
+              View Feedback
+            </button>
             <button
               type="button"
               className="admin-button-fl bg-gray-200 text-blue-700"
@@ -260,10 +271,85 @@ const EditFest = () => {
                   )}
                 </FieldArray>
               </div>
+              <div className="admin-div">
+                {/* Guests */}
+                <p className="admin-label">Sponsor</p>
+                <FieldArray name="sponsor">
+                  {({ push, remove, form }) => (
+                    <div>
+                      {form.values.sponsor.map((sponsor, index) => (
+                        <div key={index} className="flex gap-1">
+                          <div className="w-full">
+                            <Field
+                              name={`sponsor.${index}`}
+                              placeholder="Enter Sponsor Name"
+                              className="admin-input"
+                            />
+                            <ErrorMessage
+                              name={`sponsor.${index}`}
+                              component="span"
+                              className="text-sm text-red-500"
+                            />
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => remove(index)}
+                            className="admin-button-fl bg-gray-200 text-red-500 h-fit mt-2"
+                          >
+                            <BiTrash />
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        className=" mt-2 admin-button-fl bg-blue-700 text-white "
+                        onClick={() => push("")}
+                      >
+                        Add New Sponsor
+                      </button>
+                    </div>
+                  )}
+                </FieldArray>
+              </div>
             </div>
 
             <div className="lg:w-1/3">
               <div className="admin-div">
+                <p>
+                  <label htmlFor="status" className="admin-label">
+                    Status
+                  </label>
+                </p>
+                <Field
+                  as="select"
+                  name="status"
+                  className="capitalize admin-input"
+                >
+                  <option value="booking started">Booking Started</option>
+                  <option value="started">Started</option>
+                  <option value="expired">Expired</option>
+                </Field>
+                <ErrorMessage
+                  name="status"
+                  component="div"
+                  className="text-red-500"
+                />
+                <p>
+                  <label htmlFor="location.address" className="admin-label">
+                    Contact Info
+                  </label>
+                </p>
+                <Field
+                  name="contactInfo"
+                  placeholder="Enter festival address"
+                  className="admin-input"
+                />
+                <ErrorMessage
+                  name="contactInfo"
+                  component="span"
+                  className="text-sm text-red-500"
+                />
                 <p>
                   <label htmlFor="location.address" className="admin-label">
                     Address
@@ -344,6 +430,23 @@ const EditFest = () => {
                 />
                 <ErrorMessage
                   name="end_date"
+                  component="span"
+                  className="text-sm text-red-500"
+                />
+
+                <p>
+                  <label htmlFor="end_date" className="admin-label">
+                    Time
+                  </label>
+                </p>
+                <Field
+                  name="time"
+                  type="time"
+                  placeholder="Select end date"
+                  className="admin-input"
+                />
+                <ErrorMessage
+                  name="time"
                   component="span"
                   className="text-sm text-red-500"
                 />

@@ -23,6 +23,7 @@ import wishlistReducer from "./reducers/user/wishlistSlice";
 import reviewReducer from "./reducers/user/reviewSlice";
 import buyNowReducer from "./reducers/user/buyNowSlice";
 import festUserReducer from "./reducers/user/festSlice";
+import rentReducer from "./reducers/user/rentSlice";
 
 export const store = configureStore({
   reducer: {
@@ -38,6 +39,7 @@ export const store = configureStore({
     reviews: reviewReducer,
     buyNow: buyNowReducer,
     festUser: festUserReducer,
+    rent: rentReducer,
 
     // Admin Side
     products: productsReducer,

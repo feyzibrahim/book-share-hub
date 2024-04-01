@@ -6,17 +6,18 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { URL } from "@common/api";
 import { config } from "@common/configurations";
-import CheckoutCartRow from "../components/CheckoutCartRow";
 import AddressCheckoutSession from "../components/AddressCheckoutSession";
 import Loading from "../../../components/Loading";
-import { emptyBuyNowStore } from "../../../redux/reducers/user/buyNowSlice";
-import CheckoutPaymentOption from "../components/CheckoutPaymentOption";
+import { emptyRentStore } from "../../../redux/reducers/user/rentSlice";
+import CheckoutPaymentOptionForRent from "../components/CheckoutPaymentOptionForRent";
+import Modal from "../../../components/Modal";
+import AgreementModal from "./AgreementModal";
 
-const BuyNow = () => {
+const RentBook = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { product, quantity } = useSelector((state) => state.buyNow);
+  const { product, numberOfDays } = useSelector((state) => state.rent);
 
   useEffect(() => {
     if (!product) {
@@ -24,21 +25,9 @@ const BuyNow = () => {
     }
   }, []);
 
-  let offer = 0;
-  let couponType = "s";
   let totalPrice = product ? product.price + (product.markup ?? 0) : 0;
-  let shipping = 0;
-  let tax = parseInt(totalPrice * 0.08);
-  let discount = 0;
-  // let couponCode = "o";
 
-  if (couponType === "percentage") {
-    offer = (totalPrice * discount) / 100;
-  } else {
-    offer = discount;
-  }
-
-  const finalTotal = totalPrice + shipping + tax - offer;
+  const finalTotal = totalPrice * numberOfDays;
 
   // Wallet balance
   const [walletBalance, setWalletBalance] = useState(0);
@@ -46,10 +35,8 @@ const BuyNow = () => {
   // Address Selection
   const [selectedAddress, setSelectedAddress] = useState("");
   // Payment Selection
-  const [selectedPayment, setSelectedPayment] = useState(null);
-  const handleSelectedPayment = (e) => {
-    setSelectedPayment(e.target.value);
-  };
+  const [selectedPayment, setSelectedPayment] = useState("myWallet");
+
   // Additional Note
   const [additionalNotes, setAdditionalNotes] = useState("");
 
@@ -70,12 +57,13 @@ const BuyNow = () => {
 
     try {
       const order = await axios.post(
-        `${URL}/user/buy-now/${product._id}`,
+        `${URL}/user/rent/${product._id}`,
         {
           notes: additionalNotes,
           address: selectedAddress,
           paymentMode: selectedPayment,
-          quantity,
+          numberOfDays,
+          quantity: 1,
         },
         config
       );
@@ -85,7 +73,7 @@ const BuyNow = () => {
       toast.success("Order Placed");
       setOrderPlacedLoading(false);
       // setConfirmationPage(true);
-      dispatch(emptyBuyNowStore());
+      dispatch(emptyRentStore());
       navigateToOrderConfirmation(order.data.order);
     } catch (error) {
       // Error Handling
@@ -106,12 +94,12 @@ const BuyNow = () => {
     try {
       // Make the first POST request to create the order
       const orderResponse = await axios.post(
-        `${URL}/user/buy-now/${product._id}`,
+        `${URL}/user/rent-book/${product._id}`,
         {
           notes: additionalNotes,
           address: selectedAddress,
           paymentMode: selectedPayment,
-          quantity: 1,
+          numberOfDays: 1,
         },
         config
       );
@@ -143,6 +131,28 @@ const BuyNow = () => {
     }
   };
 
+  const updateWalletBalance = async (response) => {
+    try {
+      await axios.post(
+        `${URL}/user/razor-verify-wallet`,
+        { ...response, amount: cautionDeposit },
+        config
+      );
+
+      setWalletBalance(parseInt(walletBalance) + parseInt(cautionDeposit));
+      toast.success("Wallet Updated");
+    } catch (error) {
+      // Error Handling
+      console.log(error);
+      const errorMessage =
+        error.response?.data?.error ||
+        "Something went wrong. Please try again.";
+      toast.error(errorMessage);
+    }
+  };
+
+  const [cautionDeposit, setCautionDeposit] = useState(500);
+
   // Initiating razor pay payment method or window
   const initiateRazorPayPayment = async () => {
     // Getting razor-pay secret key
@@ -155,25 +165,25 @@ const BuyNow = () => {
       data: { order },
     } = await axios.post(
       `${URL}/user/razor-order`,
-      { amount: parseInt(finalTotal / 100) },
+      { amount: parseInt(cautionDeposit * 100) },
       config
     );
 
     // setting razor pay configurations
     let options = {
       key: key,
-      amount: parseInt(finalTotal / 100),
+      amount: parseInt(cautionDeposit * 100),
       currency: "INR",
       name: "Book Share Hub",
       description: "Test Transaction",
       image: `${URL}/off/logo.png`,
       order_id: order.id,
       handler: function (response) {
-        saveOrder(response);
+        updateWalletBalance(response);
       },
       prefill: {
-        name: "Gaurav Kumar",
-        email: "gaurav.kumar@example.com",
+        name: "Test User",
+        email: "testuser@example.com",
         contact: "9000090000",
       },
       notes: {
@@ -203,41 +213,48 @@ const BuyNow = () => {
   };
 
   // Order placing
-  const placeOrder = async () => {
+  const showAgreementModal = async () => {
     // Validating before placing an order
     if (!selectedAddress) {
       toast.error("Delivery address not found");
       return;
     }
-    if (!selectedPayment) {
-      toast.error("Please select a payment mode");
-      return;
-    }
 
     if (selectedPayment === "myWallet") {
-      let entireTotal =
-        Number(totalPrice) + Number(discount) + Number(tax) - Number(offer);
-      if (walletBalance < entireTotal) {
-        toast.error("Not balance in your wallet");
+      let entireTotal = Number(totalPrice);
+      if (walletBalance < entireTotal || walletBalance < 500) {
+        toast.error("Insufficient balance in your wallet");
         return;
       }
     }
 
-    if (selectedPayment === "razorPay") {
-      initiateRazorPayPayment();
-      return;
-    }
+    toggleAgreement();
+  };
 
-    if (
-      selectedPayment === "cashOnDelivery" ||
-      selectedPayment === "myWallet"
-    ) {
+  const placeOrder = () => {
+    if (selectedPayment === "myWallet") {
       saveOrderOnCashDeliveryOrMyWallet();
     }
   };
 
+  // Displaying address modal for creating address
+  const [showAgreement, setShowAgreement] = useState(false);
+  const toggleAgreement = () => {
+    setShowAgreement(!showAgreement);
+  };
+
   return (
     <>
+      {showAgreement && (
+        <Modal
+          tab={
+            <AgreementModal
+              closeToggle={toggleAgreement}
+              placeOrder={placeOrder}
+            />
+          }
+        />
+      )}
       {orderPlacedLoading ? (
         <Loading />
       ) : (
@@ -251,11 +268,12 @@ const BuyNow = () => {
               <h1 className="text-xl font-semibold border-b pb-2 mb-3">
                 Payment Option
               </h1>
-              <CheckoutPaymentOption
-                handleSelectedPayment={handleSelectedPayment}
-                selectedPayment={selectedPayment}
+              <CheckoutPaymentOptionForRent
                 walletBalance={walletBalance}
                 setWalletBalance={setWalletBalance}
+                cautionDeposit={cautionDeposit}
+                setCautionDeposit={setCautionDeposit}
+                initiateRazorPayPayment={initiateRazorPayPayment}
               />
             </div>
 
@@ -275,52 +293,45 @@ const BuyNow = () => {
           <div className="lg:w-1/4 bg-white px-5 py-3 border border-gray-200 rounded shrink-0">
             <h1 className="font-semibold py-2">Order Summery</h1>
             <div className="py-1">
-              {product && <CheckoutCartRow item={{ product, quantity }} />}
+              {product && (
+                <div className="flex gap-2 items-center mb-3">
+                  <div className="w-9 h-9 shrink-0">
+                    <img
+                      src={`${URL}/img/${product.imageURL}`}
+                      alt="im"
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold line-clamp-1">
+                      {product.name}
+                    </p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      <span className="font-semibold text-blue-500">
+                        {product.markup
+                          ? product.price + product.markup
+                          : product.price}
+                        ₹
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
             <>
               <div className="border-b border-gray-200 pb-2 mb-2">
                 <div className="cart-total-li">
+                  <p className="cart-total-li-first">Number of days:</p>
+                  <p className="cart-total-li-second">{numberOfDays}</p>
+                </div>
+              </div>
+              <div className="border-b border-gray-200 pb-2 mb-2">
+                <div className="cart-total-li">
                   <p className="cart-total-li-first">Sub Total</p>
-                  <p className="cart-total-li-second">{totalPrice}₹</p>
-                </div>
-                <div className="cart-total-li">
-                  <p className="cart-total-li-first">Shipping</p>
                   <p className="cart-total-li-second">
-                    {shipping === 0 ? "Free" : shipping}
+                    {totalPrice * numberOfDays}₹
                   </p>
                 </div>
-                <div className="cart-total-li">
-                  <p className="cart-total-li-first">Tax</p>
-                  <p className="cart-total-li-second">{parseInt(tax)}₹</p>
-                </div>
-                <div className="cart-total-li">
-                  <p className="cart-total-li-first">Discount</p>
-                  <p className="cart-total-li-second">
-                    {discount}
-                    {discount !== ""
-                      ? couponType === "percentage"
-                        ? `% Off (${offer}₹)`
-                        : "₹ Off"
-                      : "0₹"}
-                  </p>
-                </div>
-
-                {/*  {couponCode !== "" && (
-                  <>
-                    <div className="cart-total-li bg-blue-100 p-2 rounded">
-                      <p className="cart-total-li-first">Coupon Applied</p>
-                      <p className="cart-total-li-first">{couponCode}</p>
-                    </div>
-                    <div className="flex flex-row-reverse text-xs">
-                      <button
-                        className="text-red-500 hover:bg-red-100 p-1 rounded font-semibold"
-                        // onClick={() => dispatch(removeCoupon())}
-                      >
-                        Remove Coupon
-                      </button>
-                    </div>
-                  </>
-                )} */}
               </div>
               <div className="cart-total-li">
                 <p className="font-semibold text-gray-500">Total</p>
@@ -329,7 +340,7 @@ const BuyNow = () => {
             </>
             <button
               className="btn-blue w-full text-white uppercase font-semibold text-sm my-5"
-              onClick={placeOrder}
+              onClick={showAgreementModal}
             >
               Place order
             </button>
@@ -340,4 +351,4 @@ const BuyNow = () => {
   );
 };
 
-export default BuyNow;
+export default RentBook;

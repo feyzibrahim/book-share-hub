@@ -17,7 +17,8 @@ const TableRow = ({ isLast, fest }) => {
         <p className="line-clamp-1 w-52">{fest.name} </p>
       </td>
       <td className="admin-table-row">
-        {fest.location.address}, {fest.location.city}, {fest.location.country}
+        {fest?.location?.address ?? ""}, {fest?.location?.city ?? ""},{" "}
+        {fest?.location?.country ?? ""}
       </td>
       <td className="admin-table-row">
         <div className="flex items-center gap-2">

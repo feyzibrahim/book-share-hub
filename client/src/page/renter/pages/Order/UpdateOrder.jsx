@@ -93,6 +93,18 @@ const UpdateOrder = ({ toggleModal, data }) => {
                   Shipped
                 </option>
                 <option value="delivered">Delivered</option>
+                <option value="return request" className="capitalize">
+                  return request
+                </option>
+                <option value="return approved" className="capitalize">
+                  return approve
+                </option>
+                <option value="pickup completed" className="capitalize">
+                  pickup complete
+                </option>
+                <option value="returned" className="capitalize">
+                  returned
+                </option>
                 <option value="cancelled">Cancelled</option>
                 {/* <option value="returned">Returned</option> */}
               </Field>
@@ -108,7 +120,7 @@ const UpdateOrder = ({ toggleModal, data }) => {
                 type="date"
                 name="date"
                 min={orderDate}
-                max={todayDate}
+                // max={todayDate}
                 className="px-5 py-2 w-full bg-gray-300 rounded-lg"
               />
               <ErrorMessage

@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Payment = require("../../model/paymentModel");
 const uuid = require("uuid");
 const { generateInvoicePDF } = require("../Common/invoicePDFGenFunctions");
+const jwt = require("jsonwebtoken");
 
 // Function checking if the passed status is valid or not. Ensuring redundant searches are avoided
 function isValidStatus(status) {
@@ -107,7 +108,7 @@ const getOrders = async (req, res) => {
 
     const skip = (page - 1) * limit;
 
-    const orders = await Order.find(filter, {
+    let orders = await Order.find(filter, {
       address: 0,
       statusHistory: 0,
       products: { $slice: 1 },
@@ -115,8 +116,21 @@ const getOrders = async (req, res) => {
       .skip(skip)
       .limit(limit)
       .populate("user", { firstName: 1, lastName: 1 })
-      .populate("products.productId", { imageURL: 1, name: 1 })
+      .populate("products.productId", { imageURL: 1, name: 1, createdBy: 1 })
       .sort({ createdAt: -1 });
+
+    const token = req.cookies.user_token;
+
+    const { _id, role } = jwt.verify(token, process.env.SECRET);
+
+    if (role === "renter" || role === "publisher") {
+      orders = orders.filter((order) => {
+        // Check if any product within the order has createdBy matching the user's _id
+        return order.products.some(
+          (product) => String(product.productId.createdBy) === String(_id)
+        );
+      });
+    }
 
     const totalAvailableOrders = await Order.countDocuments(filter);
 

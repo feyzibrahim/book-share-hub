@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToWishlist } from "../../redux/actions/user/wishlistActions";
 import ProductDetailsStarAndRating from "./components/ProductDetailsStarAndRating";
 import { addToBuyNowStore } from "../../redux/reducers/user/buyNowSlice";
+import { addToRentStore } from "../../redux/reducers/user/rentSlice";
 import ImageZoom from "../../components/ImageZoom";
 
 const ProductDetails = () => {
@@ -187,9 +188,12 @@ const ProductDetails = () => {
                   {product.markup
                     ? product.price + product.markup
                     : product.price}
-                  ₹
+                  ₹{" "}
                 </span>
-                {"  "}
+                {product.productType === "rent" && (
+                  <span className="text-sm text-black">Per day</span>
+                )}
+
                 {product.offer && (
                   <>
                     <span className="text-gray-500 line-through">
@@ -217,44 +221,83 @@ const ProductDetails = () => {
                     </p>
                   </div>
                 ))}
-              <div className="flex my-4 gap-3">
-                <Quantity
-                  count={count}
-                  decrement={decrement}
-                  increment={increment}
-                />
-                <button
-                  onClick={addToCart}
-                  className="w-full font-semibold text-blue-700 border border-blue-700 rounded-lg p-2 hover:bg-blue-700 hover:text-white"
-                  disabled={cartLoading}
-                >
-                  {cartLoading ? "Loading" : "Add to Cart"}
-                </button>
-              </div>
-              <div className="flex gap-3">
-                <button
-                  className="w-full font-semibold hover:bg-blue-500 rounded-lg p-2 bg-blue-700 text-white"
-                  onClick={() => {
-                    dispatch(addToBuyNowStore({ product, count }));
-                    navigate(`/buy-now`);
-                  }}
-                >
-                  Buy Now
-                </button>
-
-                {isProductInWishlist ? (
-                  <div className="border border-gray-500 rounded-lg p-3">
-                    <AiFillHeart />
+              {product && product.productType === "sell" ? (
+                <>
+                  <div className="flex my-4 gap-3">
+                    <Quantity
+                      count={count}
+                      decrement={decrement}
+                      increment={increment}
+                    />
+                    <button
+                      onClick={addToCart}
+                      className="w-full font-semibold text-blue-700 border border-blue-700 rounded-lg p-2 hover:bg-blue-700 hover:text-white"
+                      disabled={cartLoading}
+                    >
+                      {cartLoading ? "Loading" : "Add to Cart"}
+                    </button>
                   </div>
-                ) : (
-                  <button
-                    className="border border-gray-500 rounded-lg px-3 hover:bg-white"
-                    onClick={dispatchAddWishlist}
-                  >
-                    <AiOutlineHeart />
-                  </button>
-                )}
-              </div>
+                  <div className="flex gap-3">
+                    <button
+                      className="w-full font-semibold hover:bg-blue-500 rounded-lg p-2 bg-blue-700 text-white"
+                      onClick={() => {
+                        dispatch(addToBuyNowStore({ product, count }));
+                        navigate(`/buy-now`);
+                      }}
+                    >
+                      Buy Now
+                    </button>
+
+                    {isProductInWishlist ? (
+                      <div className="border border-gray-500 rounded-lg p-3">
+                        <AiFillHeart />
+                      </div>
+                    ) : (
+                      <button
+                        className="border border-gray-500 rounded-lg px-3 hover:bg-white"
+                        onClick={dispatchAddWishlist}
+                      >
+                        <AiOutlineHeart />
+                      </button>
+                    )}
+                  </div>{" "}
+                </>
+              ) : (
+                <>
+                  <div className="flex my-4 gap-3">
+                    <button
+                      className="w-full font-semibold hover:bg-blue-500 rounded-lg p-2 bg-blue-700 text-white"
+                      onClick={() => {
+                        dispatch(addToRentStore({ product, count }));
+                        navigate(`/rent`);
+                      }}
+                    >
+                      Rent Now
+                    </button>
+
+                    {isProductInWishlist ? (
+                      <div className="border border-gray-500 rounded-lg p-3">
+                        <AiFillHeart />
+                      </div>
+                    ) : (
+                      <button
+                        className="border border-gray-500 rounded-lg px-3 hover:bg-white"
+                        onClick={dispatchAddWishlist}
+                      >
+                        <AiOutlineHeart />
+                      </button>
+                    )}
+                  </div>
+                  <div className="w-fit flex items-center gap-2">
+                    <p>Number of days required:</p>
+                    <Quantity
+                      count={count}
+                      decrement={decrement}
+                      increment={increment}
+                    />
+                  </div>
+                </>
+              )}
             </div>
           </div>
           <DescReview product={product} id={id} />

@@ -66,7 +66,6 @@ const ProductSchema = new Schema({
   },
   markup: {
     type: Number,
-    required: true,
   },
 });
 
@@ -127,6 +126,10 @@ const OrderSchema = new Schema(
       ],
       default: "pending",
     },
+    orderType: {
+      type: String,
+      enum: ["buy", "rent"],
+    },
     statusHistory: [StatusHistorySchema],
     address: AddressSchema,
     deliveryDate: {
@@ -160,6 +163,9 @@ const OrderSchema = new Schema(
     totalQuantity: {
       type: Number,
       min: 0,
+    },
+    numberOfDays: {
+      type: Number,
     },
     notes: {
       type: String,
