@@ -232,6 +232,15 @@ const Register = () => {
                     />
                     <label htmlFor="publisher">Publish</label>
                   </div>
+                  <div className="flex items-center gap-1">
+                    <Field
+                      className="sign-up-input"
+                      type="radio"
+                      name="role"
+                      value="seller"
+                    />
+                    <label htmlFor="seller">Sell</label>
+                  </div>
                 </div>
                 <ErrorMessage
                   className="text-sm text-red-500"

@@ -1,21 +1,47 @@
 const Order = require("../../model/orderModel");
 const User = require("../../model/userModel");
 const moment = require("moment");
+const jwt = require("jsonwebtoken");
+const Mongoose = require("mongoose");
 
 // Reading the admin Dashboard sales chart data
 const readRevenueData = async (req, res) => {
   try {
     const numberOfDates = req.query.numberOfDates || 7;
+    const token = req.cookies.user_token;
+    const { _id, role } = jwt.verify(token, process.env.SECRET);
 
-    const totalSales = await Order.aggregate([
-      {
-        $match: {
-          createdAt: {
-            $gte: moment().subtract(numberOfDates, "days").toDate(),
-            $lte: new Date(),
-          },
+    const matchStage = {
+      $match: {
+        createdAt: {
+          $gte: moment().subtract(numberOfDates, "days").toDate(),
+          $lte: new Date(),
         },
       },
+    };
+
+    let lookupStage = [
+      {
+        $lookup: {
+          from: "products",
+          localField: "products.productId",
+          foreignField: "_id",
+          as: "productDetails",
+        },
+      },
+    ];
+
+    if (role !== "superAdmin") {
+      lookupStage.push({
+        $match: {
+          "productDetails.createdBy": new Mongoose.Types.ObjectId(_id),
+        },
+      });
+    }
+
+    const totalSales = await Order.aggregate([
+      matchStage,
+      ...lookupStage,
       {
         $group: {
           _id: null,
@@ -25,14 +51,8 @@ const readRevenueData = async (req, res) => {
     ]);
 
     const eachDayData = await Order.aggregate([
-      {
-        $match: {
-          createdAt: {
-            $gte: moment().subtract(numberOfDates, "days").toDate(),
-            $lte: new Date(),
-          },
-        },
-      },
+      matchStage,
+      ...lookupStage,
       {
         $unwind: "$products",
       },
@@ -107,6 +127,71 @@ const readUserCount = async (req, res) => {
 // Reading the total count of products sold, and products sold on each day
 const readSalesData = async (req, res) => {
   try {
+    const token = req.cookies.user_token;
+    const { _id, role } = jwt.verify(token, process.env.SECRET);
+
+    const numberOfDates = req.query.numberOfDates || 7;
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - numberOfDates);
+
+    let matchStage = { $match: { createdAt: { $gte: startDate } } };
+
+    let lookupStage = [
+      {
+        $lookup: {
+          from: "products",
+          localField: "products.productId",
+          foreignField: "_id",
+          as: "productsDetails",
+        },
+      },
+    ];
+
+    if (role !== "superAdmin") {
+      lookupStage.push({
+        $match: {
+          "productsDetails.createdBy": new Mongoose.Types.ObjectId(_id),
+        },
+      });
+    }
+
+    const unwindStage = { $unwind: "$products" };
+
+    const groupStage = {
+      $group: {
+        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+        totalProductsCount: { $sum: "$products.quantity" },
+      },
+    };
+
+    const sortStage = { $sort: { _id: 1 } };
+
+    const aggregationPipeline = [
+      matchStage,
+      ...lookupStage,
+      unwindStage,
+      groupStage,
+      sortStage,
+    ];
+
+    const productsByDay = await Order.aggregate(aggregationPipeline);
+
+    let totalProductsCount = 0;
+    productsByDay.forEach((day) => {
+      totalProductsCount += day.totalProductsCount;
+    });
+
+    return res.status(200).json({ totalProductsCount, productsByDay });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const readProfitData = async (req, res) => {
+  try {
+    const token = req.cookies.user_token;
+    const { _id, role } = jwt.verify(token, process.env.SECRET);
+
     const numberOfDates = req.query.numberOfDates || 7;
     const query = {};
     const startDate = new Date();
@@ -116,54 +201,23 @@ const readSalesData = async (req, res) => {
       query.createdAt = { $gte: startDate };
     }
 
-    const orders = await Order.find(query);
-    let totalProductsCount = 0;
-
-    orders.forEach((order) => {
-      totalProductsCount += order.products.reduce(
-        (acc, product) => acc + product.quantity,
-        0
-      );
-    });
-
-    const productsByDay = await Order.aggregate([
+    const lookupStage = [
       {
+        $lookup: {
+          from: "products",
+          localField: "products.productId",
+          foreignField: "_id",
+          as: "productsDetails",
+        },
+      },
+    ];
+
+    if (role !== "superAdmin") {
+      lookupStage.push({
         $match: {
-          createdAt: { $gte: startDate },
+          "productsDetails.createdBy": new Mongoose.Types.ObjectId(_id),
         },
-      },
-      {
-        $unwind: "$products",
-      },
-      {
-        $group: {
-          _id: {
-            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
-          },
-          totalProductsCount: { $sum: "$products.quantity" },
-        },
-      },
-      {
-        $sort: { _id: 1 },
-      },
-    ]);
-
-    return res.status(200).json({ totalProductsCount, productsByDay });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
-
-// Reading the total profits and profits made on each day
-const readProfitData = async (req, res) => {
-  try {
-    const numberOfDates = req.query.numberOfDates || 7;
-    const query = {};
-    const startDate = new Date();
-
-    if (numberOfDates !== null) {
-      startDate.setDate(startDate.getDate() - numberOfDates);
-      query.createdAt = { $gte: startDate };
+      });
     }
 
     const profit = await Order.aggregate([
@@ -172,13 +226,11 @@ const readProfitData = async (req, res) => {
           createdAt: { $gte: startDate },
         },
       },
-      {
-        $unwind: "$products",
-      },
+      ...lookupStage,
       {
         $group: {
           _id: null,
-          totalMarkupSum: { $sum: "$products.markup" },
+          totalMarkupSum: { $sum: "$totalPrice" },
         },
       },
     ]);
@@ -189,15 +241,13 @@ const readProfitData = async (req, res) => {
           createdAt: { $gte: startDate },
         },
       },
-      {
-        $unwind: "$products",
-      },
+      ...lookupStage,
       {
         $group: {
           _id: {
             $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
           },
-          dailyMarkupSum: { $sum: "$products.markup" },
+          dailyMarkupSum: { $sum: "$totalPrice" },
         },
       },
       {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import { blockOrUnBlock } from "../../../../redux/actions/superAdmin/adminAction";
 import { useDispatch } from "react-redux";
+import { blockOrUnBlock } from "../../../../redux/actions/admin/customerAction";
 
 const BlockOrUnBlock = ({ toggleModal, data }) => {
   const { id, status } = data;

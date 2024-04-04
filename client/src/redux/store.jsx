@@ -10,9 +10,6 @@ import paymentsReducer from "./reducers/admin/paymentSlice";
 import couponsReducer from "./reducers/admin/couponsSlice";
 import festReducer from "./reducers/admin/festsSlice";
 
-// Super Admin
-import adminReducer from "./reducers/superAdmin/adminSlice";
-
 // User
 import userProductsReducer from "./reducers/user/userProductSlice";
 import userOrderReducer from "./reducers/user/userOrdersSLice";
@@ -49,8 +46,5 @@ export const store = configureStore({
     payments: paymentsReducer,
     coupons: couponsReducer,
     fests: festReducer,
-
-    // Super Admin
-    admins: adminReducer,
   },
 });

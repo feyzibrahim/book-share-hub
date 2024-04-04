@@ -4,7 +4,6 @@ import OrderTableRow from "../Components/OrderTableRow";
 import { getOrders } from "../../../redux/actions/admin/ordersAction";
 import SalesChart from "../Components/DashboardComponents/SalesChart";
 import ProfitChart from "../Components/DashboardComponents/ProfitChart";
-import UserChart from "../Components/DashboardComponents/UserChart";
 import RevenueChart from "../Components/DashboardComponents/RevenueChart";
 import MostSoldChart from "../Components/DashboardComponents/MostSoldChart";
 import Modal from "../../../components/Modal";
@@ -110,15 +109,10 @@ const PublisherHome = () => {
         <div className="flex lg:flex-row flex-col gap-5 mb-5">
           <SalesChart numberOfDates={numberOfDates} />
           <ProfitChart numberOfDates={numberOfDates} />
-          <UserChart numberOfDates={numberOfDates} />
         </div>
 
         <div className="flex gap-5 lg:flex-row flex-col">
           <RevenueChart numberOfDates={numberOfDates} />
-          <div className="bg-white p-5 rounded-md w-full lg:w-1/3">
-            <h1 className="text-lg font-bold">Most Sold Items</h1>
-            <MostSoldChart numberOfDates={numberOfDates} />
-          </div>
         </div>
         {orders && orders.length > 0 ? (
           <div className="overflow-x-scroll lg:overflow-hidden bg-white rounded-lg my-5">

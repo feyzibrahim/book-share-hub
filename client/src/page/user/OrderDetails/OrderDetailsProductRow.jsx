@@ -9,6 +9,8 @@ const OrderDetailsProductRow = ({
   item,
   status,
   toggleReviewModal,
+  orderType,
+  numberOfDays,
 }) => {
   const isLast = index === length - 1;
   const classes = isLast ? "p-4" : "p-4 border-b border-gray-200 ";
@@ -37,10 +39,14 @@ const OrderDetailsProductRow = ({
           </div>
         </div>
       </td>
-      <td className="admin-table-row">{item.price + item.markup}</td>
-      <td className="admin-table-row">{item.quantity}</td>
+      <td className="admin-table-row">{item.price + (item.markup ?? 0)}</td>
       <td className="admin-table-row">
-        {item.price + item.markup * item.quantity}
+        {orderType === "rent" ? numberOfDays : item.quantity}
+      </td>
+      <td className="admin-table-row">
+        {orderType === "rent"
+          ? item.price * numberOfDays
+          : (item.price + (item.markup ?? 0)) * item.quantity}
       </td>
       {status !== "pending" &&
         status !== "processing" &&

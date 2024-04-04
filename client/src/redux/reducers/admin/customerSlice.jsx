@@ -5,6 +5,7 @@ import {
   blockOrUnBlock,
   getRenters,
   getPublishers,
+  getSellers,
 } from "../../actions/admin/customerAction";
 import toast from "react-hot-toast";
 
@@ -56,6 +57,20 @@ const customerSlice = createSlice({
         state.totalAvailableUsers = payload.totalAvailableUsers;
       })
       .addCase(getPublishers.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.customers = null;
+        state.error = payload;
+      })
+      .addCase(getSellers.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getSellers.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.error = null;
+        state.customers = payload.customers;
+        state.totalAvailableUsers = payload.totalAvailableUsers;
+      })
+      .addCase(getSellers.rejected, (state, { payload }) => {
         state.loading = false;
         state.customers = null;
         state.error = payload;

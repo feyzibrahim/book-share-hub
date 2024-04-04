@@ -61,7 +61,7 @@ const ProductDetails = () => {
       config
     );
 
-    if (data.stockQuantity > count) {
+    if (data.stockQuantity > 1) {
       setCount((c) => c + 1);
     } else {
       toast.error("Quantity Insufficient");
@@ -71,6 +71,17 @@ const ProductDetails = () => {
   const decrement = () => {
     if (count > 1) {
       setCount((c) => c - 1);
+    }
+  };
+
+  const customDateIncrement = async (val) => {
+    const { data } = await axios.get(
+      `${URL}/user/product-quantity/${id}`,
+      config
+    );
+
+    if (data.stockQuantity > 1) {
+      setCount(val);
     }
   };
 
@@ -296,6 +307,40 @@ const ProductDetails = () => {
                       increment={increment}
                     />
                   </div>
+                  {product.productType === "rent" && (
+                    <div className="flex gap-2 mt-3">
+                      <button
+                        className={`${
+                          count !== 7
+                            ? `btn-blue-border-no-pad`
+                            : "btn-blue-no-pad"
+                        } p-2`}
+                        onClick={() => customDateIncrement(7)}
+                      >
+                        1 week
+                      </button>
+                      <button
+                        className={`${
+                          count !== 30
+                            ? `btn-blue-border-no-pad`
+                            : "btn-blue-no-pad"
+                        } p-2`}
+                        onClick={() => customDateIncrement(30)}
+                      >
+                        1 Month
+                      </button>
+                      <button
+                        className={`${
+                          count !== 180
+                            ? `btn-blue-border-no-pad`
+                            : "btn-blue-no-pad"
+                        } p-2`}
+                        onClick={() => customDateIncrement(180)}
+                      >
+                        6 Month
+                      </button>
+                    </div>
+                  )}
                 </>
               )}
             </div>

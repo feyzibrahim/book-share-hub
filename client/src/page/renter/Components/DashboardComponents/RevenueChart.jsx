@@ -35,7 +35,7 @@ const RevenueChart = ({ numberOfDates }) => {
   }, [numberOfDates]);
 
   return (
-    <div className="bg-white px-5 pt-5 pb-20 rounded-md w-full lg:w-2/3 h-80">
+    <div className="bg-white px-5 pt-5 pb-20 rounded-md w-full h-80">
       <h1 className="text-lg font-bold">Total Revenue</h1>
       <p className="mb-2">₹{totalSales || 0}</p>
       <Bar

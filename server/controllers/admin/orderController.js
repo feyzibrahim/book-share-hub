@@ -123,7 +123,7 @@ const getOrders = async (req, res) => {
 
     const { _id, role } = jwt.verify(token, process.env.SECRET);
 
-    if (role === "renter" || role === "publisher") {
+    if (role === "renter" || role === "publisher" || role === "seller") {
       orders = orders.filter((order) => {
         // Check if any product within the order has createdBy matching the user's _id
         return order.products.some(

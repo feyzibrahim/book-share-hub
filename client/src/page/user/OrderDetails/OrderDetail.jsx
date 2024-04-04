@@ -268,7 +268,11 @@ const OrderDetail = () => {
                       <tr className="bg-gray-100 border border-gray-300">
                         <td className="py-2 px-1 w-4/12">Products</td>
                         <td className="py-2 px-1 w-1/12">Price</td>
-                        <td className="py-2 px-1 w-1/12">Quantity</td>
+                        <td className="py-2 px-1 w-1/12">
+                          {orderData.orderType === "rent"
+                            ? "No of days"
+                            : "Quantity"}
+                        </td>
                         <td className="py-2 px-1 w-1/12">Sub-Total</td>
                         {orderData.status !== "pending" &&
                           orderData.status !== "processing" &&
@@ -287,6 +291,8 @@ const OrderDetail = () => {
                             key={index}
                             status={orderData.status}
                             toggleReviewModal={toggleReviewModal}
+                            orderType={orderData?.orderType}
+                            numberOfDays={orderData?.numberOfDays}
                           />
                         ))}
                     </tbody>

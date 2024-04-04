@@ -215,6 +215,77 @@ const getPublishers = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+// Getting all Sellers to list on admin dashboard
+const getSellers = async (req, res) => {
+  try {
+    const {
+      status,
+      search,
+      page = 1,
+      limit = 10,
+      startingDate,
+      endingDate,
+    } = req.query;
+
+    let filter = {};
+
+    if (status) {
+      if (status === "active") {
+        filter.isActive = true;
+      } else {
+        filter.isActive = false;
+      }
+    }
+
+    if (search) {
+      if (search.includes(" ")) {
+        const [firstName, lastName] = search.split(" ");
+        filter.firstName = { $regex: new RegExp(firstName, "i") };
+        filter.lastName = { $regex: new RegExp(lastName, "i") };
+      } else {
+        filter.$or = [
+          { firstName: { $regex: new RegExp(search, "i") } },
+          { lastName: { $regex: new RegExp(search, "i") } },
+        ];
+      }
+    }
+    // Date
+    if (startingDate) {
+      const date = new Date(startingDate);
+      filter.createdAt = { $gte: date };
+    }
+    if (endingDate) {
+      const date = new Date(endingDate);
+      filter.createdAt = { ...filter.createdAt, $lte: date };
+    }
+
+    const skip = (page - 1) * limit;
+
+    // Getting all users
+    const customers = await User.find(
+      { role: "seller", ...filter },
+      {
+        password: 0,
+        dateOfBirth: 0,
+        role: 0,
+        walletBalance: 0,
+        isEmailVerified: 0,
+      }
+    )
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    const totalAvailableUsers = await User.countDocuments({
+      role: "seller",
+      ...filter,
+    });
+
+    res.status(200).json({ customers, totalAvailableUsers });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
 // Not completed
 const getCustomer = (req, res) => {
@@ -304,4 +375,5 @@ module.exports = {
   blockOrUnBlockCustomer,
   getRenters,
   getPublishers,
+  getSellers,
 };

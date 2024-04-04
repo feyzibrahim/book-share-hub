@@ -77,12 +77,14 @@ const TableRow = ({ item }) => {
           {cartLoading ? (
             <JustLoading size={5} />
           ) : (
-            <FaCartPlus
-              className="hover:text-gray-700 cursor-pointer"
-              onClick={() => {
-                addToCart(item.product._id);
-              }}
-            />
+            item.product.productType === "sell" && (
+              <FaCartPlus
+                className="hover:text-gray-700 cursor-pointer"
+                onClick={() => {
+                  addToCart(item.product._id);
+                }}
+              />
+            )
           )}
           <BiTrashAlt
             className="hover:text-gray-700 cursor-pointer"

@@ -19,6 +19,7 @@ const {
   blockOrUnBlockCustomer,
   getRenters,
   getPublishers,
+  getSellers,
 } = require("../controllers/admin/customerController");
 const {
   getCategories,
@@ -97,6 +98,7 @@ router.patch("/customer-block-unblock/:id", blockOrUnBlockCustomer);
 // Renter
 router.get("/renters", getRenters);
 router.get("/publishers", getPublishers);
+router.get("/sellers", getSellers);
 
 // Category controller functions mounting them to corresponding route
 router.get("/categories", getCategories);

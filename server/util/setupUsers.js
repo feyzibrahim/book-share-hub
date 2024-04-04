@@ -15,6 +15,9 @@ const createUser = async (email, firstName, lastName, password, role) => {
     await User.signup(newUser, role, true);
   }
 };
+const deleteUser = async (email) => {
+  await User.findOneAndDelete({ email: email });
+};
 
 const setupUsers = async () => {
   const list = [
@@ -96,41 +99,51 @@ const setupUsers = async () => {
       role: "renter",
     },
     {
-      firstName: "Buyer",
+      firstName: "User",
       lastName: "One",
-      email: "buyer1@gmail.com",
-      password: "Buyer@1234",
+      email: "user1@gmail.com",
+      password: "User@1234",
       role: "buyer",
     },
     {
-      firstName: "Buyer",
+      firstName: "User",
       lastName: "Two",
-      email: "buyer2@gmail.com",
-      password: "Buyer@1234",
+      email: "user2@gmail.com",
+      password: "User@1234",
       role: "buyer",
     },
     {
-      firstName: "Buyer",
+      firstName: "User",
       lastName: "Three",
-      email: "buyer3@gmail.com",
-      password: "Buyer@1234",
+      email: "user3@gmail.com",
+      password: "User@1234",
       role: "buyer",
     },
     {
-      firstName: "Buyer",
+      firstName: "User",
       lastName: "Four",
-      email: "buyer4@gmail.com",
-      password: "Buyer@1234",
+      email: "user4@gmail.com",
+      password: "User@1234",
       role: "buyer",
     },
     {
-      firstName: "Buyer",
+      firstName: "User",
       lastName: "Five",
-      email: "buyer5@gmail.com",
-      password: "Buyer@1234",
+      email: "user5@gmail.com",
+      password: "User@1234",
       role: "buyer",
     },
   ];
+
+  const deleteUserList = [
+    "buyer1@gmail.com",
+    "buyer2@gmail.com",
+    "buyer3@gmail.com",
+    "buyer4@gmail.com",
+    "buyer5@gmail.com",
+  ];
+
+  deleteUserList.map((dl) => deleteUser(dl));
 
   list.map((li) =>
     createUser(li.email, li.firstName, li.lastName, li.password, li.role)

@@ -9,7 +9,7 @@ const getProducts = async (req, res) => {
       search,
       sort,
       page = 1,
-      limit = 4,
+      limit = 40,
       productType,
     } = req.query;
 

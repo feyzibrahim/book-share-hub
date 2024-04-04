@@ -50,7 +50,6 @@ import Help from "./page/admin/pages/Help";
 
 import ManageAdmins from "./page/admin/pages/admins/ManageAdmins";
 import Customers from "./page/admin/pages/customer/Customers";
-import CreateAdmin from "./page/admin/pages/admins/CreateAdmin";
 
 import Products from "./page/admin/pages/products/Products";
 import AddProducts from "./page/admin/pages/products/AddProducts";
@@ -94,6 +93,12 @@ import AdminFeedbackPage from "./page/admin/pages/fests/feedback/AdminFeedbackPa
 import OrdersPublisher from "./page/publisher/pages/Order/OrdersPublisher";
 import RentBook from "./page/user/rent";
 import OrdersRenter from "./page/renter/pages/Order/OrdersRenter";
+import SellerDashboard from "./page/seller/SellerDashboard";
+import SellerProducts from "./page/seller/pages/products/SellerProducts";
+import EditSellerProduct from "./page/seller/pages/products/EditSellerProduct";
+import OrdersSeller from "./page/seller/pages/Order/OrdersSeller";
+import SellerHome from "./page/seller/pages/SellerHome";
+import SellerSettings from "./page/seller/pages/SellerSettings";
 
 function App() {
   const { user } = useSelector((state) => state.user);
@@ -129,6 +134,9 @@ function App() {
     }
     if (user.role === "publisher") {
       return <Navigate to="/publisher/" />;
+    }
+    if (user.role === "seller") {
+      return <Navigate to="/seller/" />;
     }
   };
 
@@ -192,8 +200,7 @@ function App() {
           </Route>
 
           {/* Admin Routes */}
-          {(user && user.role === "admin") ||
-          (user && user.role === "superAdmin") ? (
+          {user && user.role === "superAdmin" ? (
             <Route path="/admin/*" element={<AdminRoutes />} />
           ) : (
             <Route path="/admin" element={<Navigate to="/" />} />
@@ -210,6 +217,11 @@ function App() {
             <Route path="/publisher/*" element={<PublisherRoutes />} />
           ) : (
             <Route path="/publisher" element={<Navigate to="/" />} />
+          )}
+          {user && user.role === "seller" ? (
+            <Route path="/seller/*" element={<SellerRoutes />} />
+          ) : (
+            <Route path="/seller" element={<Navigate to="/" />} />
           )}
 
           <Route path="*" element={<Error404 />} />
@@ -243,8 +255,7 @@ function AdminRoutes() {
           element={<OrderDetails />}
         />
 
-        <Route path="manageAdmins" element={<ManageAdmins />} />
-        <Route path="manageAdmins/create" element={<CreateAdmin />} />
+        <Route path="sellers" element={<ManageAdmins />} />
 
         <Route path="coupon" element={<Coupon />} />
         <Route path="coupon/create" element={<CreateCoupon />} />
@@ -309,6 +320,29 @@ function PublisherRoutes() {
           element={<OrderDetails />}
         />
         <Route path="settings" element={<PublisherSettings />} />
+        <Route path="help" element={<Help />} />
+        <Route path="*" element={<Error404 />} />
+      </Route>
+    </Routes>
+  );
+}
+function SellerRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={<SellerDashboard />}>
+        <Route index element={<SellerHome />} />
+        <Route path="books" element={<SellerProducts />} />
+        <Route path="books/add" element={<AddPublishProducts />} />
+        <Route path="books/edit/:id" element={<EditSellerProduct />} />
+
+        <Route path="orders" element={<OrdersSeller />} />
+        <Route path="orders/detail/:id" element={<OrderDetails />} />
+        <Route path="orders/return-requests" element={<ReturnRequests />} />
+        <Route
+          path="orders/return-requests/detail/:id"
+          element={<OrderDetails />}
+        />
+        <Route path="settings" element={<SellerSettings />} />
         <Route path="help" element={<Help />} />
         <Route path="*" element={<Error404 />} />
       </Route>

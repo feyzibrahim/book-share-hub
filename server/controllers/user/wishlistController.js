@@ -21,6 +21,7 @@ const getWishlist = async (req, res) => {
         price: 1,
         markup: 1,
         status: 1,
+        productType: 1,
       })
       .sort({ createdAt: -1 });
 

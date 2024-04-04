@@ -52,6 +52,18 @@ export const getPublishers = createAsyncThunk(
     );
   }
 );
+export const getSellers = createAsyncThunk(
+  "customers/getSellers",
+  async (queries, { rejectWithValue }) => {
+    return commonReduxRequest(
+      "get",
+      `/admin/sellers${queries && `?${queries}`}`,
+      null,
+      appJson,
+      rejectWithValue
+    );
+  }
+);
 
 export const blockOrUnBlock = createAsyncThunk(
   "customers/blockOrUnBlock",

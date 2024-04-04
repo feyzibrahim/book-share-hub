@@ -173,7 +173,7 @@ const createOrder = async (req, res) => {
               transaction_id: counter.count + 1,
               amount: sumWithTax,
               type: "debit",
-              description: "Product Ordered",
+              description: "Book Rented",
               order: order._id,
             },
           },
@@ -622,8 +622,14 @@ const rentBook = async (req, res) => {
       throw Error("Insufficient Quantity");
     }
 
-    const sum = product.price + (product.markup ?? 0);
+    const sum = (product.price + (product.markup ?? 0)) * numberOfDays;
     const sumWithTax = parseInt(sum);
+
+    const walletForCheck = await Wallet.findOne({ user: _id });
+
+    if (walletForCheck.balance < sum + 500) {
+      throw Error("Insufficient Balance");
+    }
 
     // Request Body
 
@@ -647,7 +653,7 @@ const rentBook = async (req, res) => {
       address: addressData,
       products: products,
       subTotal: sum,
-      tax: parseInt(sum * 0.08),
+      tax: 0,
       totalPrice: sumWithTax,
       paymentMode,
       numberOfDays,
@@ -707,7 +713,7 @@ const rentBook = async (req, res) => {
               transaction_id: counter.count + 1,
               amount: sumWithTax,
               type: "debit",
-              description: "Product Ordered",
+              description: "Book Rented",
               order: order._id,
             },
           },
