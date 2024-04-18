@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { FiDownload } from "react-icons/fi";
+import { useEffect, useState } from "react";
 import BreadCrumbs from "../../Components/BreadCrumbs";
 import { useSelector, useDispatch } from "react-redux";
 import Modal from "../../../../components/Modal";
@@ -94,7 +93,7 @@ const OrdersRenter = () => {
     const params = new URLSearchParams(window.location.search);
     const pageNumber = params.get("page");
     setPage(parseInt(pageNumber || 1));
-  }, [searchParams]);
+  }, [searchParams, dispatch]);
 
   // Export Modal
   const [showExportModal, setShowExportModal] = useState(false);

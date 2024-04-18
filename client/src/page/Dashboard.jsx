@@ -162,7 +162,7 @@ const Dashboard = () => {
           />
           <SortButton handleClick={handleClick} sort={sort} />
           <div className="shrink-0 hidden lg:block">
-            {userProducts.length}/{totalAvailableProducts} Results Loaded
+            {userProducts ? userProducts.length : 1}/{totalAvailableProducts ? totalAvailableProducts : 1} Results Loaded
           </div>
         </div>
         {loading ? (

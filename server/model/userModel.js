@@ -162,6 +162,10 @@ UserSchema.statics.changePassword = async function (
     throw Error("Cannot find email");
   }
 
+  if (!exists.password) {
+    throw Error("You haven't set any password yet");
+  }
+
   const match = await bcrypt.compare(currentPassword, exists.password);
 
   if (!match) {

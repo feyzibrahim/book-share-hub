@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import BreadCrumbs from "../../Components/BreadCrumbs";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import date from "date-and-time";
 
 import { URL } from "../../../../Common/api";
-import { FiDownload } from "react-icons/fi";
 import { BiCalendar, BiHash } from "react-icons/bi";
 import { FaRegCreditCard, FaMapMarkerAlt } from "react-icons/fa";
 import { AiOutlineUser, AiOutlinePhone } from "react-icons/ai";
@@ -38,38 +37,12 @@ const OrderDetails = () => {
     loadInitialData();
   }, []);
 
-  // Downloading invoice
-  const handleGenerateInvoice = async () => {
-    try {
-      const response = await axios.get(`${URL}/admin/order-invoice/${id}`, {
-        responseType: "blob",
-      });
-
-      const blob = new Blob([response.data], { type: "application/pdf" });
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = "invoice.pdf";
-      link.click();
-    } catch (error) {
-      console.error("Error generating invoice:", error);
-    }
-  };
-
   return (
     <div className="p-5 w-full overflow-y-auto text-sm">
       <div className="xy-center font-semibold">
         <div>
           <h1 className="font-bold text-2xl">Orders Details</h1>
           <BreadCrumbs list={["Dashboard", "Orders", "Order Details"]} />
-        </div>
-        <div className="flex">
-          <button
-            className="admin-button-fl bg-blue-700 hover:bg-blue-500 active:bg-blue-400 text-white"
-            onClick={handleGenerateInvoice}
-          >
-            <FiDownload />
-            Invoice
-          </button>
         </div>
       </div>
       {orderData && (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlinePlus, AiOutlineEdit } from "react-icons/ai";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -16,7 +16,7 @@ const Categories = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { categories, loading, error, totalAvailableCategories } = useSelector(
+  const { categories, loading, totalAvailableCategories } = useSelector(
     (state) => state.categories
   );
 
@@ -50,7 +50,7 @@ const Categories = () => {
     const params = new URLSearchParams(window.location.search);
     const pageNumber = params.get("page");
     setPage(parseInt(pageNumber || 1));
-  }, [searchParams]);
+  }, [searchParams, dispatch]);
 
   return (
     <>
@@ -123,8 +123,10 @@ const Categories = () => {
 
                           {category.name}
                         </td>
-                        <td className="admin-table-row">
-                          {category.description}
+                        <td className="admin-table-row max-w-xs">
+                          <p className=" line-clamp-2">
+                            {category.description}
+                          </p>
                         </td>
                         <td className="admin-table-row">
                           {category.createdAt

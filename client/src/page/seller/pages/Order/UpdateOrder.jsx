@@ -108,7 +108,6 @@ const UpdateOrder = ({ toggleModal, data }) => {
                 type="date"
                 name="date"
                 min={orderDate}
-                max={todayDate}
                 className="px-5 py-2 w-full bg-gray-300 rounded-lg"
               />
               <ErrorMessage

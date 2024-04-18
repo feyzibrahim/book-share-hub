@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -10,16 +10,16 @@ import CheckoutCartRow from "./components/CheckoutCartRow";
 import AddressCheckoutSession from "./components/AddressCheckoutSession";
 import TotalAndSubTotal from "./components/TotalAndSubTotal";
 import Loading from "../../components/Loading";
-import OrderConfirmation from "./components/OrderConfirmation";
 import { clearCartOnOrderPlaced } from "../../redux/reducers/user/cartSlice";
 import CheckoutPaymentOption from "./components/CheckoutPaymentOption";
+import AddMoneyToWallet from "./components/AddMoneyToWallet";
 
 const Checkout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // Cart from Redux
-  const { cart, loading, error } = useSelector((state) => state.cart);
+  const { cart } = useSelector((state) => state.cart);
   const { totalPrice, shipping, discount, tax, couponType } = useSelector(
     (state) => state.cart
   );
@@ -36,6 +36,7 @@ const Checkout = () => {
 
   // Wallet balance
   const [walletBalance, setWalletBalance] = useState(0);
+  const [cautionDeposit, setCautionDeposit] = useState(0);
 
   // Address Selection
   const [selectedAddress, setSelectedAddress] = useState("");
@@ -60,7 +61,7 @@ const Checkout = () => {
   };
 
   // Cash on delivery or wallet balance
-  const saveOrderOnCashDeliveryOrMyWallet = async (response) => {
+  const saveOrderOnCashDeliveryOrMyWallet = async () => {
     setOrderPlacedLoading(true);
 
     try {
@@ -146,14 +147,14 @@ const Checkout = () => {
       data: { order },
     } = await axios.post(
       `${URL}/user/razor-order`,
-      { amount: parseInt(finalTotal / 100) },
+      { amount: parseInt(finalTotal) * 100 },
       config
     );
 
     // setting razor pay configurations
     let options = {
       key: key,
-      amount: parseInt(finalTotal / 100),
+      amount: parseInt(finalTotal) * 100,
       currency: "INR",
       name: "Book Share Hub",
       description: "Test Transaction",
@@ -165,6 +166,89 @@ const Checkout = () => {
       prefill: {
         name: "Gaurav Kumar",
         email: "gaurav.kumar@example.com",
+        contact: "9000090000",
+      },
+      notes: {
+        address: "Razor pay Corporate Office",
+      },
+      theme: {
+        color: "#2b2b30",
+      },
+    };
+
+    // enabling razor-pay payment screen
+    const razor = new window.Razorpay(options);
+
+    razor.open();
+
+    // If failed toast it.
+    razor.on("payment.failed", function (response) {
+      toast.error(response.error.code);
+      toast.error(response.error.description);
+      toast.error(response.error.source);
+      toast.error(response.error.step);
+      toast.error(response.error.reason);
+      toast.error(response.error.metadata.order_id);
+      toast.error(response.error.metadata.payment_id);
+      setOrderPlacedLoading(false);
+    });
+  };
+
+  // Adding money to wallet
+  const updateWalletBalance = async (response) => {
+    try {
+      await axios.post(
+        `${URL}/user/razor-verify-wallet`,
+        { ...response, amount: cautionDeposit },
+        config
+      );
+
+      setWalletBalance(parseInt(walletBalance) + parseInt(cautionDeposit));
+      toast.success("Wallet Updated");
+    } catch (error) {
+      // Error Handling
+      console.log(error);
+      const errorMessage =
+        error.response?.data?.error ||
+        "Something went wrong. Please try again.";
+      toast.error(errorMessage);
+    }
+  };
+
+  const initiateRazorPayPaymentForWallet = async () => {
+    if (cautionDeposit < 1) {
+      toast.error("At-least 1 rs is required");
+    }
+
+    // Getting razor-pay secret key
+    const {
+      data: { key },
+    } = await axios.get(`${URL}/user/razor-key`, { withCredentials: true });
+
+    // making razor-pay order
+    const {
+      data: { order },
+    } = await axios.post(
+      `${URL}/user/razor-order`,
+      { amount: parseInt(cautionDeposit * 100) },
+      config
+    );
+
+    // setting razor pay configurations
+    let options = {
+      key: key,
+      amount: parseInt(cautionDeposit * 100),
+      currency: "INR",
+      name: "Book Share Hub",
+      description: "Test Transaction",
+      image: `${URL}/off/logo.png`,
+      order_id: order.id,
+      handler: function (response) {
+        updateWalletBalance(response);
+      },
+      prefill: {
+        name: "Test User",
+        email: "testuser@example.com",
         contact: "9000090000",
       },
       notes: {
@@ -235,7 +319,7 @@ const Checkout = () => {
     if (orderData) {
       navigate(-1);
     }
-  }, [orderData]);
+  }, [orderData, navigate]);
 
   return (
     <>
@@ -257,6 +341,12 @@ const Checkout = () => {
                 selectedPayment={selectedPayment}
                 walletBalance={walletBalance}
                 setWalletBalance={setWalletBalance}
+              />
+              <AddMoneyToWallet
+                setWalletBalance={setWalletBalance}
+                cautionDeposit={cautionDeposit}
+                setCautionDeposit={setCautionDeposit}
+                initiateRazorPayPayment={initiateRazorPayPaymentForWallet}
               />
             </div>
 

@@ -91,7 +91,7 @@ const FestsPage = () => {
         </div>
         <div className="lg:flex justify-between items-center font-semibold">
           <FilterArray
-            list={["all", "active", "expired"]}
+            list={["all", "started", "expired"]}
             handleClick={handleFilter}
           />
           <div className="flex my-2 gap-3">

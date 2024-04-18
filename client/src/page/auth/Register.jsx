@@ -219,9 +219,9 @@ const Register = () => {
                       className="sign-up-input"
                       type="radio"
                       name="role"
-                      value="Renter"
+                      value="renter"
                     />
-                    <label htmlFor="Renter">Lend</label>
+                    <label htmlFor="renter">Lend</label>
                   </div>
                   <div className="flex items-center gap-1">
                     <Field

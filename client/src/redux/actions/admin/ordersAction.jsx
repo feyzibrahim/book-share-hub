@@ -8,7 +8,7 @@ export const getOrders = createAsyncThunk(
   async (queries, { rejectWithValue }) => {
     return commonReduxRequest(
       "get",
-      `/admin/orders${queries && `?${queries}`}`,
+      `/admin/orders${queries.size > 0 ? `?${queries}` : ""}`,
       null,
       appJson,
       rejectWithValue

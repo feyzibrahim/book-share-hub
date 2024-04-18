@@ -24,6 +24,8 @@ const Cart = () => {
     (state) => state.cart
   );
 
+  console.log(cart)
+
   const [inputCouponCode, setInputCouponCode] = useState("");
 
   // Fetching entire cart on page load

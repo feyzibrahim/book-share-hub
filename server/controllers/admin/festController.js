@@ -27,11 +27,7 @@ const getFests = async (req, res) => {
     }
 
     if (status) {
-      if (status === "active") {
-        filter.isActive = true;
-      } else {
-        filter.isActive = false;
-      }
+      filter.status = status;
     }
 
     if (search) {

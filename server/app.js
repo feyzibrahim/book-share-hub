@@ -49,7 +49,7 @@ app.use("/api/public", publicRoutes);
 app.use("/api/img", express.static(__dirname + "/public/products/"));
 app.use("/api/off", express.static(__dirname + "/public/official/"));
 
-mongoose
+mongoose // this one is connection code
   .connect(process.env.MONGO_URI)
   .then(() => {
     app.listen(process.env.PORT, () => {
@@ -60,3 +60,4 @@ mongoose
   .catch((error) => {
     console.log(error);
   });
+

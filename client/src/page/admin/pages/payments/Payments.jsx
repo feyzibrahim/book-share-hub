@@ -133,7 +133,7 @@ const Payments = () => {
                       <td className="admin-table-row">{adjustedIndex}</td>
                       <td className="admin-table-row flex items-center gap-2">
                         <p className="line-clamp-1 mb-1 font-semibold">
-                          {item.user.firstName} {item.user.lastName}
+                          {item?.user?.firstName} {item?.user?.lastName}
                         </p>
                       </td>
                       <td className="admin-table-row">

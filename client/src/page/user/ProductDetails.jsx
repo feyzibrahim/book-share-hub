@@ -209,7 +209,7 @@ const ProductDetails = () => {
                   <>
                     <span className="text-gray-500 line-through">
                       {parseInt(
-                        ((product.price + product.markup) *
+                        ((product.price + (product.markup ?? 0)) *
                           (product.offer + 100)) /
                           100
                       )}

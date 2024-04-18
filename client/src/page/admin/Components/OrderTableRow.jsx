@@ -18,9 +18,9 @@ const OrderTableRow = ({ item, index, toggleUpdateModal, classes }) => {
       <td className="admin-table-row">{index}</td>
       <td className="admin-table-row flex items-center gap-2">
         <div className="w-10 h-10 overflow-clip flex justify-center items-center  shrink-0">
-          {item.products[0].productId.imageURL ? (
+          {item.products[0]?.productId?.imageURL ? (
             <img
-              src={`${URL}/img/${item.products[0].productId.imageURL}`}
+              src={`${URL}/img/${item.products[0]?.productId?.imageURL}`}
               alt="img"
               className="object-contain w-full h-full"
             />
@@ -30,7 +30,7 @@ const OrderTableRow = ({ item, index, toggleUpdateModal, classes }) => {
         </div>
         <div>
           <p className="line-clamp-1 mb-1 font-semibold">
-            {item.products[0].productId.name}
+            {item.products[0]?.productId?.name}
           </p>
           <p className="font-semibold text-gray-500">
             {item.totalQuantity === 1
@@ -43,7 +43,7 @@ const OrderTableRow = ({ item, index, toggleUpdateModal, classes }) => {
         {date.format(new Date(item.createdAt), "MMM DD YYYY")}
       </td>
       <td className="admin-table-row">
-        {item.user.firstName} {item.user.lastName}
+        {item.user?.firstName} {item.user?.lastName}
       </td>
       <td className="admin-table-row">{item.totalPrice}₹</td>
       <td className="admin-table-row">

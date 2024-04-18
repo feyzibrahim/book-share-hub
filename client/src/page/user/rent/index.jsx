@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -23,7 +23,7 @@ const RentBook = () => {
     if (!product) {
       navigate("/");
     }
-  }, []);
+  }, [product, navigate]);
 
   let totalPrice = product ? product.price + (product.markup ?? 0) : 0;
 
@@ -35,7 +35,8 @@ const RentBook = () => {
   // Address Selection
   const [selectedAddress, setSelectedAddress] = useState("");
   // Payment Selection
-  const [selectedPayment, setSelectedPayment] = useState("myWallet");
+  // const [selectedPayment, setSelectedPayment] = useState("myWallet");
+  const selectedPayment = "myWallet";
 
   // Additional Note
   const [additionalNotes, setAdditionalNotes] = useState("");
@@ -52,7 +53,7 @@ const RentBook = () => {
   };
 
   // Cash on delivery or wallet balance
-  const saveOrderOnCashDeliveryOrMyWallet = async (response) => {
+  const saveOrderOnCashDeliveryOrMyWallet = async () => {
     setOrderPlacedLoading(true);
 
     try {
@@ -77,52 +78,6 @@ const RentBook = () => {
       navigateToOrderConfirmation(order.data.order);
     } catch (error) {
       // Error Handling
-      const errorMessage =
-        error.response?.data?.error ||
-        "Something went wrong. Please try again.";
-      toast.error(errorMessage);
-      setOrderPlacedLoading(false);
-    }
-  };
-
-  // Razor Pay payment
-
-  // Saving the order to db
-  const saveOrder = async (response) => {
-    setOrderPlacedLoading(true);
-
-    try {
-      // Make the first POST request to create the order
-      const orderResponse = await axios.post(
-        `${URL}/user/rent-book/${product._id}`,
-        {
-          notes: additionalNotes,
-          address: selectedAddress,
-          paymentMode: selectedPayment,
-          numberOfDays: 1,
-        },
-        config
-      );
-
-      const { order } = orderResponse.data;
-
-      // Make the second POST request to verify payment with Razorpay and save that to database
-      await axios.post(
-        `${URL}/user/razor-verify`,
-        { ...response, order: order._id },
-        config
-      );
-
-      // Updating user side
-      // setOrderData(order);
-      toast.success("Order Placed");
-      setOrderPlacedLoading(false);
-      // setConfirmationPage(true);
-      dispatch(emptyBuyNowStore());
-      navigateToOrderConfirmation(order);
-    } catch (error) {
-      // Error Handling
-      console.log(error);
       const errorMessage =
         error.response?.data?.error ||
         "Something went wrong. Please try again.";
@@ -165,14 +120,14 @@ const RentBook = () => {
       data: { order },
     } = await axios.post(
       `${URL}/user/razor-order`,
-      { amount: parseInt(cautionDeposit * 100) },
+      { amount: parseInt(cautionDeposit) * 100 },
       config
     );
 
     // setting razor pay configurations
     let options = {
       key: key,
-      amount: parseInt(cautionDeposit * 100),
+      amount: parseInt(cautionDeposit) * 100,
       currency: "INR",
       name: "Book Share Hub",
       description: "Test Transaction",

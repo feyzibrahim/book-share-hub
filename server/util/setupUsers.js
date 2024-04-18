@@ -133,6 +133,41 @@ const setupUsers = async () => {
       password: "User@1234",
       role: "buyer",
     },
+    {
+      firstName: "Seller", // edit values
+      lastName: "One",
+      email: "seller1@gmail.com",
+      password: "Seller@1234",
+      role: "seller",
+    },
+    {
+      firstName: "Seller",
+      lastName: "Two",
+      email: "seller2@gmail.com",
+      password: "Seller@1234",
+      role: "seller",
+    },
+    {
+      firstName: "Seller",
+      lastName: "Three",
+      email: "seller3@gmail.com",
+      password: "Seller3@1234",
+      role: "seller",
+    },
+    {
+      firstName: "Seller",
+      lastName: "Four",
+      email: "seller4@gmail.com",
+      password: "Seller4@1234",
+      role: "seller",
+    },
+    {
+      firstName: "Seller",
+      lastName: "Five",
+      email: "seller5@gmail.com",
+      password: "Seller5@1234",
+      role: "seller",
+    },
   ];
 
   const deleteUserList = [

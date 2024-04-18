@@ -1,4 +1,3 @@
-import React from "react";
 import date from "date-and-time";
 import StatusComponent from "../../../components/StatusComponent";
 import { AiOutlineEdit } from "react-icons/ai";
@@ -12,7 +11,7 @@ const OrderTableRow = ({ item, index, toggleUpdateModal, classes }) => {
     <tr
       className={`${classes} hover:bg-gray-200 active:bg-gray-300 cursor-pointer`}
       onClick={() =>
-        navigate(`/publisher/orders/detail/${item.orderId || item._id}`)
+        navigate(`/seller/orders/detail/${item.orderId || item._id}`)
       }
     >
       <td className="admin-table-row">{index}</td>

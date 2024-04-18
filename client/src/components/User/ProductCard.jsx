@@ -33,21 +33,20 @@ const ProductCard = ({ product }) => {
         {product.offer && (
           <span className="text-gray-500 line-through">
             {parseInt(
-              ((product.price + product.markup) * (product.offer + 100)) / 100
+              ((product.price + (product.markup ?? 0)) * (product.offer + 100)) / 100
             )}
             ₹
           </span>
         )}
         {product.markup ? (
-          <span>{product.price + product.markup}₹</span>
+          <span>{product.price + (product.markup ?? 0)}₹</span>
         ) : (
           <span>{product.price}₹</span>
         )}
       </p>
       <p
-        className={`absolute top-2 right-2 ${
-          product.productType === "sell" ? "bg-red-500" : "bg-green-500"
-        }  text-white px-2 capitalize rounded-md`}
+        className={`absolute top-2 right-2 ${product.productType === "sell" ? "bg-red-500" : "bg-green-500"
+          }  text-white px-2 capitalize rounded-md`}
       >
         {product.productType === "sell" ? "buy" : "rent"}
       </p>

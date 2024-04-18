@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 import { URL } from "../../../Common/api";
 import { config } from "../../../Common/configurations";
@@ -17,7 +17,7 @@ const CheckoutPaymentOptionForRent = ({
       setWalletBalance(data.balance);
     };
     fetchWalletBalance();
-  }, []);
+  }, [setWalletBalance]);
 
   return (
     <>

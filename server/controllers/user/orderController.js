@@ -94,7 +94,7 @@ const createOrder = async (req, res) => {
       quantity: item.quantity,
       totalPrice: item.product.price + (item.product.markup ?? 0),
       price: item.product.price,
-      markup: item.product.markup,
+      markup: item.product.markup ?? 0,
     }));
 
     let orderData = {
@@ -498,7 +498,7 @@ const buyNow = async (req, res) => {
       throw Error("Insufficient Quantity");
     }
 
-    const sum = product.price + product.markup;
+    const sum = product.price + (product.markup ?? 0);
     const sumWithTax = parseInt(sum + sum * 0.08);
 
     // Request Body
@@ -513,9 +513,9 @@ const buyNow = async (req, res) => {
     products.push({
       productId: product._id,
       quantity: quantity,
-      totalPrice: product.price + product.markup,
+      totalPrice: product.price + (product.markup ?? 0),
       price: product.price,
-      markup: product.markup,
+      markup: product.markup ?? 0,
     });
 
     let orderData = {
@@ -614,6 +614,18 @@ const rentBook = async (req, res) => {
     const { id } = req.params;
 
     const product = await Products.findOne({ _id: id });
+    console.log(
+      "🚀 file: -> file: orderController.js:617 -> rentBook -> product",
+      product.stockQuantity
+    );
+    console.log(
+      "🚀 file: -> file: orderController.js:626 -> rentBook -> quantity",
+      quantity
+    );
+    console.log(
+      "🚀 file: -> file: orderController.js:626 -> rentBook -> quantity",
+      quantity > product.stockQuantity
+    );
     if (!product) {
       throw Error("No product were found with this id");
     }
@@ -628,7 +640,9 @@ const rentBook = async (req, res) => {
     const walletForCheck = await Wallet.findOne({ user: _id });
 
     if (walletForCheck.balance < sum + 500) {
-      throw Error("Insufficient Balance");
+      throw Error(
+        "Insufficient Balance, You need 500 + rent amount in the wallet"
+      );
     }
 
     // Request Body

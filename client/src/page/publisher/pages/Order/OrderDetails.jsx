@@ -62,7 +62,7 @@ const OrderDetails = () => {
           <h1 className="font-bold text-2xl">Orders Details</h1>
           <BreadCrumbs list={["Dashboard", "Orders", "Order Details"]} />
         </div>
-        <div className="flex">
+        {/* <div className="flex">
           <button
             className="admin-button-fl bg-blue-700 hover:bg-blue-500 active:bg-blue-400 text-white"
             onClick={handleGenerateInvoice}
@@ -70,7 +70,7 @@ const OrderDetails = () => {
             <FiDownload />
             Invoice
           </button>
-        </div>
+        </div> */}
       </div>
       {orderData && (
         <>
