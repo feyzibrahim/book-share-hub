@@ -16,7 +16,57 @@ Booksharehub is a web application built using the MERN stack (MongoDB, Express.j
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/booksharehub.git
+git clone https://github.com/feyzibrahim/book-share-hub.git
 ```
 
 2. Navigate to the project directory:
+
+```bash
+cd book-share-hub
+```
+
+3. Install dependencies for both the server and client:
+
+```bash
+cd server
+```
+
+```bash
+npm install
+```
+
+```bash
+cd client
+```
+
+```bash
+npm install
+```
+
+4. Start the server and client
+
+```bash
+cd server
+```
+
+```bash
+npm start
+```
+
+```bash
+cd client
+```
+
+```bash
+npm start
+```
+
+5. Open your browser and navigate to `http://localhost:5173` to access the Booksharehub application.
+
+## Contributing
+
+If you would like to contribute to this project, please fork the repository and create a new branch for your changes.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
