@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 import JustLoading from "../../../components/JustLoading";
 
 const CartProductRow = ({ item, isLast, toggleProductConfirm }) => {
-  console.log("file: CartProductRow.jsx:15 -> CartProductRow -> item", item);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

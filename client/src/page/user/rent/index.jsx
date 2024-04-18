@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -19,11 +19,11 @@ const RentBook = () => {
 
   const { product, numberOfDays } = useSelector((state) => state.rent);
 
-  useEffect(() => {
-    if (!product) {
-      navigate("/");
-    }
-  }, [product, navigate]);
+  // useEffect(() => {
+  //   if (!product) {
+  //     navigate("/");
+  //   }
+  // }, [product]);
 
   let totalPrice = product ? product.price + (product.markup ?? 0) : 0;
 
@@ -74,8 +74,8 @@ const RentBook = () => {
       toast.success("Order Placed");
       setOrderPlacedLoading(false);
       // setConfirmationPage(true);
-      dispatch(emptyRentStore());
       navigateToOrderConfirmation(order.data.order);
+      dispatch(emptyRentStore());
     } catch (error) {
       // Error Handling
       const errorMessage =

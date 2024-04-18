@@ -194,16 +194,21 @@ OrderSchema.pre("save", async function (next) {
   }
 
   try {
-    const counter = await Counter.findOne({ model: "Order", field: "orderId" });
+    if (!this.orderId) {
+      const counter = await Counter.findOne({
+        model: "Order",
+        field: "orderId",
+      });
 
-    // Checking if order counter already exist
-    if (counter) {
-      this.orderId = counter.count + 1;
-      counter.count += 1;
-      await counter.save();
-    } else {
-      await Counter.create({ model: "Order", field: "orderId" });
-      this.orderId = 1000;
+      // Checking if order counter already exist
+      if (counter) {
+        this.orderId = counter.count + 1;
+        counter.count += 1;
+        await counter.save();
+      } else {
+        await Counter.create({ model: "Order", field: "orderId" });
+        this.orderId = 1000;
+      }
     }
 
     return next();

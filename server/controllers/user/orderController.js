@@ -17,7 +17,6 @@ const updateProductList = async (id, count) => {
 
   if (count < 0) {
     if (product.stockQuantity - count * -1 < 0) {
-      throw Error(`${product.name} doesn\'t have ${count} stock`);
     }
   }
 
@@ -59,7 +58,6 @@ const createOrder = async (req, res) => {
     const { _id } = jwt.verify(token, process.env.SECRET);
 
     if (!mongoose.Types.ObjectId.isValid(_id)) {
-      throw Error("Invalid ID!!!");
     }
 
     const { address, paymentMode, notes } = req.body;
@@ -70,66 +68,103 @@ const createOrder = async (req, res) => {
       name: 1,
       price: 1,
       markup: 1,
+      createdBy: 1,
     });
 
-    let sum = 0;
-    let totalQuantity = 0;
+    const productsByCreator = {};
 
-    cart.items.map((item) => {
-      sum =
-        sum + (item.product.price + (item.product.markup ?? 0)) * item.quantity;
-      totalQuantity = totalQuantity + item.quantity;
+    cart.items.forEach((item) => {
+      const createdBy = item.product.createdBy.toString();
+      if (!productsByCreator[createdBy]) {
+        productsByCreator[createdBy] = [];
+      }
+      productsByCreator[createdBy].push({
+        productId: item.product._id,
+        quantity: item.quantity,
+        totalPrice:
+          (item.product.price + (item.product.markup ?? 0)) * item.quantity,
+        price: item.product.price,
+        markup: item.product.markup ?? 0,
+      });
     });
 
-    let sumWithTax = parseInt(sum + sum * 0.08);
-    if (cart.discount && cart.type === "percentage") {
-      const discountAmount = (sum * cart.discount) / 100;
-      sumWithTax -= discountAmount;
-    } else if (cart.discount && cart.type === "fixed") {
-      sumWithTax -= cart.discount;
+    let counter = await Counter.findOne({
+      model: "Order",
+      field: "orderId",
+    });
+
+    // Checking if order counter already exist
+    if (!counter) {
+      counter = await Counter.create({ model: "Order", field: "orderId" });
+    } else {
+      counter.count++;
     }
+
+    // Create orders for each creator
+
+    const orders = await Promise.all(
+      Object.entries(productsByCreator).map(async ([creator, products]) => {
+        const subTotal = products.reduce(
+          (acc, curr) => acc + curr.totalPrice,
+          0
+        );
+        let totalQuantity = products.reduce(
+          (acc, curr) => acc + curr.quantity,
+          0
+        );
+
+        let sumWithTax = parseInt(subTotal + subTotal * 0.08);
+
+        // Apply discount if applicable
+        if (cart.discount && cart.type === "percentage") {
+          const discountAmount = (subTotal * cart.discount) / 100;
+          sumWithTax -= discountAmount;
+        } else if (cart.discount && cart.type === "fixed") {
+          sumWithTax -= cart.discount;
+        }
+
+        const orderData = {
+          orderId: counter.count,
+          user: _id,
+          address: addressData,
+          products,
+          subTotal,
+          tax: parseInt(subTotal * 0.08),
+          totalPrice: sumWithTax,
+          paymentMode,
+          orderType: "buy",
+          totalQuantity,
+          statusHistory: [{ status: "pending" }],
+          ...(notes ? notes : {}),
+          ...(cart.coupon ? { coupon: cart.coupon } : {}),
+          ...(cart.couponCode ? { couponCode: cart.couponCode } : {}),
+          ...(cart.discount ? { discount: cart.discount } : {}),
+          ...(cart.type ? { couponType: cart.type } : {}),
+        };
+        counter.count++;
+        const order = await Order.create(orderData);
+        return order;
+      })
+    );
 
     const products = cart.items.map((item) => ({
       productId: item.product._id,
       quantity: item.quantity,
-      totalPrice: item.product.price + (item.product.markup ?? 0),
-      price: item.product.price,
-      markup: item.product.markup ?? 0,
     }));
-
-    let orderData = {
-      user: _id,
-      address: addressData,
-      products: products,
-      subTotal: sum,
-      tax: parseInt(sum * 0.08),
-      totalPrice: sumWithTax,
-      paymentMode,
-      orderType: "buy",
-      totalQuantity,
-      statusHistory: [
-        {
-          status: "pending",
-        },
-      ],
-      ...(notes ? notes : {}),
-      ...(cart.coupon ? { coupon: cart.coupon } : {}),
-      ...(cart.couponCode ? { couponCode: cart.couponCode } : {}),
-      ...(cart.discount ? { discount: cart.discount } : {}),
-      ...(cart.type ? { couponType: cart.type } : {}),
-    };
-
     const updateProductPromises = products.map((item) => {
       return updateProductList(item.productId, -item.quantity);
     });
 
     await Promise.all(updateProductPromises);
 
-    const order = await Order.create(orderData);
-
-    if (order) {
-      await Cart.findByIdAndDelete(cart._id);
-    }
+    await Counter.findOneAndUpdate(
+      {
+        model: "Order",
+        field: "orderId",
+      },
+      { count: counter.count }
+    );
+    await Cart.findByIdAndDelete(cart._id);
 
     // When payment is done using wallet reducing the wallet and creating payment
     if (paymentMode === "myWallet") {
@@ -151,11 +186,10 @@ const createOrder = async (req, res) => {
 
       const exists = await Wallet.findOne({ user: _id });
       if (!exists) {
-        throw Error("No Wallet where found");
       }
 
       await Payment.create({
-        order: order._id,
+        order: orders[0]._id,
         payment_id: `wallet_${uuid.v4()}`,
         user: _id,
         status: "success",
@@ -174,7 +208,7 @@ const createOrder = async (req, res) => {
               amount: sumWithTax,
               type: "debit",
               description: "Book Rented",
-              order: order._id,
+              order: orders[0]._id,
             },
           },
         });
@@ -190,7 +224,7 @@ const createOrder = async (req, res) => {
       );
     }
 
-    res.status(200).json({ order });
+    res.status(200).json({ order: orders });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -204,7 +238,6 @@ const getOrders = async (req, res) => {
     const { _id } = jwt.verify(token, process.env.SECRET);
 
     if (!mongoose.Types.ObjectId.isValid(_id)) {
-      throw Error("Invalid ID!!!");
     }
 
     const { page = 1, limit = 10 } = req.query;
@@ -254,7 +287,6 @@ const getOrder = async (req, res) => {
     });
 
     if (!order) {
-      throw Error("No Such Order");
     }
 
     res.status(200).json({ order });
@@ -315,7 +347,6 @@ const cancelOrder = async (req, res) => {
       const { _id } = jwt.verify(token, process.env.SECRET);
 
       if (!mongoose.Types.ObjectId.isValid(_id)) {
-        throw Error("Invalid ID!!!");
       }
       // Adding the refund to wallet of user.
 
@@ -453,7 +484,6 @@ const orderCount = async (req, res) => {
     const { _id } = jwt.verify(token, process.env.SECRET);
 
     if (!mongoose.Types.ObjectId.isValid(_id)) {
-      throw Error("Invalid ID!!!");
     }
 
     const totalOrders = await Order.countDocuments({ user: _id });
@@ -484,18 +514,15 @@ const buyNow = async (req, res) => {
     const { _id } = jwt.verify(token, process.env.SECRET);
 
     if (!mongoose.Types.ObjectId.isValid(_id)) {
-      throw Error("Invalid ID!!!");
     }
     // Product ID
     const { id } = req.params;
 
     const product = await Products.findOne({ _id: id });
     if (!product) {
-      throw Error("No product were found with this id");
     }
 
     if (quantity > product.stockQuantity) {
-      throw Error("Insufficient Quantity");
     }
 
     const sum = product.price + (product.markup ?? 0);
@@ -505,7 +532,6 @@ const buyNow = async (req, res) => {
 
     const addressData = await Address.findOne({ _id: address });
     if (!addressData) {
-      throw Error("Address cannot be found");
     }
 
     let products = [];
@@ -544,7 +570,6 @@ const buyNow = async (req, res) => {
     if (paymentMode === "myWallet") {
       const exists = await Wallet.findOne({ user: _id });
       if (!exists) {
-        throw Error("No Wallet where found");
       }
 
       await Payment.create({
@@ -608,30 +633,16 @@ const rentBook = async (req, res) => {
     const { _id } = jwt.verify(token, process.env.SECRET);
 
     if (!mongoose.Types.ObjectId.isValid(_id)) {
-      throw Error("Invalid ID!!!");
     }
     // Product ID
     const { id } = req.params;
 
     const product = await Products.findOne({ _id: id });
-    console.log(
-      "🚀 file: -> file: orderController.js:617 -> rentBook -> product",
-      product.stockQuantity
-    );
-    console.log(
-      "🚀 file: -> file: orderController.js:626 -> rentBook -> quantity",
-      quantity
-    );
-    console.log(
-      "🚀 file: -> file: orderController.js:626 -> rentBook -> quantity",
-      quantity > product.stockQuantity
-    );
+
     if (!product) {
-      throw Error("No product were found with this id");
     }
 
     if (quantity > product.stockQuantity) {
-      throw Error("Insufficient Quantity");
     }
 
     const sum = (product.price + (product.markup ?? 0)) * numberOfDays;
@@ -640,7 +651,7 @@ const rentBook = async (req, res) => {
     const walletForCheck = await Wallet.findOne({ user: _id });
 
     if (walletForCheck.balance < sum + 500) {
-      throw Error(
+      throw new Error(
         "Insufficient Balance, You need 500 + rent amount in the wallet"
       );
     }
@@ -649,7 +660,6 @@ const rentBook = async (req, res) => {
 
     const addressData = await Address.findOne({ _id: address });
     if (!addressData) {
-      throw Error("Address cannot be found");
     }
 
     let products = [];
@@ -689,7 +699,6 @@ const rentBook = async (req, res) => {
     if (paymentMode === "myWallet") {
       const exists = await Wallet.findOne({ user: _id });
       if (!exists) {
-        throw Error("No Wallet where found");
       }
 
       await Payment.create({

@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { TiTick } from "react-icons/ti";
 import date from "date-and-time";
@@ -24,23 +23,68 @@ const OrderConfirmation = () => {
           </p>
         </div>
         <div className="mb-8">
-          <div className="py-3 border-b">
+          <div className="py-3 ">
             <h3 className="text-lg font-semibold mb-2">Order Details</h3>
-            <p>Order ID: {orderData.orderId}</p>
-            <p>Order Total: {orderData.totalPrice}</p>
-            <p>
-              <Link
-                to={`/dashboard/order-history/detail/${
-                  orderData.orderId || orderData._id
-                }`}
-                className="flex items-center justify-center gap-2 text-sm py-2 text-blue-500 hover:underline"
-              >
-                View Details <BsArrowRight />
-              </Link>
-            </p>
+            {!Array.isArray(orderData) ? (
+              <>
+                <p>Order ID: {orderData.orderId}</p>
+                <p>Order Total: {orderData.totalPrice}</p>
+                <p>
+                  <Link
+                    to={`/dashboard/order-history/detail/${
+                      orderData.orderId || orderData._id
+                    }`}
+                    className="flex items-center justify-center gap-2 text-sm py-2 text-blue-500 hover:underline"
+                  >
+                    View Details <BsArrowRight />
+                  </Link>
+                </p>
+                <h1 className="text-lg font-semibold my-2">
+                  Expected Delivery Date
+                </h1>
+                <p>
+                  {date.format(new Date(orderData.deliveryDate), "MMM DD YYYY")}
+                </p>
+              </>
+            ) : (
+              <>
+                {orderData && orderData.length > 0 && (
+                  <table className="table-auto w-full">
+                    <thead>
+                      <tr>
+                        <th className="px-4 py-2">Order ID</th>
+                        <th className="px-4 py-2">Order Total</th>
+                        <th className="px-4 py-2">Delivery Date</th>
+                        <th className="px-4 py-2">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {orderData.map((order, index) => (
+                        <tr key={index} className="border-b">
+                          <td className="px-4 py-2">{order.orderId}</td>
+                          <td className="px-4 py-2">{order.totalPrice}</td>
+                          <td className="px-4 py-2">
+                            {date.format(
+                              new Date(order.deliveryDate),
+                              "MMM DD YYYY"
+                            )}
+                          </td>
+                          <td className="px-4 py-2">
+                            <Link
+                              to={`/dashboard/order-history/detail/${order.orderId}`}
+                              className="flex items-center justify-center gap-2 text-sm py-2 text-blue-500 hover:underline"
+                            >
+                              View Details <BsArrowRight />
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </>
+            )}
           </div>
-          <h1 className="text-lg font-semibold my-2">Expected Delivery Date</h1>
-          <p>{date.format(new Date(orderData.deliveryDate), "MMM DD YYYY")}</p>
         </div>
         <Link to="/" className="text-blue-500 hover:underline">
           Continue Shopping

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BiSearchAlt } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,11 +20,9 @@ import EmptyCart from "../../assets/emptyCart.png";
 const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { cart, loading, error, cartId, couponCode } = useSelector(
+  const { cart, loading, cartId, couponCode } = useSelector(
     (state) => state.cart
   );
-
-  console.log(cart)
 
   const [inputCouponCode, setInputCouponCode] = useState("");
 
